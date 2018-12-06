@@ -28,15 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     jugador.cpp \
     proyectil.cpp \
-    drop.cpp \
-    salud.cpp
+    controles.cpp \
+    usuario.cpp
 
 HEADERS += \
         mainwindow.h \
     jugador.h \
     proyectil.h \
-    drop.h \
-    salud.h
+    controles.h \
+    usuario.h
 
 FORMS += \
         mainwindow.ui

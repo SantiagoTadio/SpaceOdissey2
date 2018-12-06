@@ -2,15 +2,14 @@
     <qresource prefix="/images">
         <file>BG.png</file>
         <file>bg2.png</file>
-        <file>op3.png</file>
-        <file>spsc.jpg</file>
-        <file>ttt.png</file>
         <file>peque.png</file>
-        <file>peque2.png</file>
         <file>peque3.png</file>
         <file>cura3.png</file>
         <file>fireball_big2.png</file>
         <file>fireball_small2.png</file>
+        <file>damage.png</file>
+        <file>powerUP.png</file>
+        <file>Sin título-1.png</file>
     </qresource>
     <qresource prefix="/music">
         <file>audio.mp3</file>
