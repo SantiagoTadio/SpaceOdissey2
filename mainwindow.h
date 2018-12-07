@@ -27,7 +27,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_plainTextEdit_windowIconTextChanged(const QString &iconText);
+
     void spawn();
     void animar();
     void on_pushButton_clicked();
@@ -37,6 +37,8 @@ private slots:
     void cargarDatos(string nombreArchivo);
 
     void on_pushButton_2_clicked();
+
+
 
 private:
     Ui::MainWindow *ui;

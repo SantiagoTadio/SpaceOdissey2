@@ -8,8 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    singlePlayer=false;
-    bossOn=false;
+
 
    scene = new QGraphicsScene;
    QMediaPlayer * musica = new QMediaPlayer;
@@ -26,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
    spawning->start(1500);
 
    player1->setPos(385,411);
-
    player2->setPos(385,411);
    ui->graphicsView->scene()->addItem(player1);
    if(!singlePlayer)
@@ -43,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
    control->setFlag(QGraphicsItem::ItemIsFocusable);
    control->setFocus();
+   cargarDatos("datos.txt");
 
    musica->play();
 }
@@ -51,11 +50,12 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete scene;
-}
-
-void MainWindow::on_plainTextEdit_windowIconTextChanged(const QString &iconText)
-{
-    scene->setBackgroundBrush(QBrush(QImage(":/images/BG.png")));
+    delete control;
+    delete player1;
+    delete player2;
+    delete jefe;
+    delete animacion;
+    delete spawning;
 }
 
 void MainWindow::spawn()
@@ -111,26 +111,32 @@ void MainWindow::guardarDatos()
 }
 
 void MainWindow::cargarDatos(string archivo){
+
+
     ifstream file(archivo);
-    string linea="", dato="", dato2="";
+    char linea[50]="", dato[15]="", dato2[10]="";
     int contador=0, contador2=0;
-    getline(file,linea);
-    if(linea[0]=='1') singlePlayer= true;
+    file.getline(linea,50);
+    if(linea[0]=='1') singlePlayer=true;
     else singlePlayer=false;
     if(linea[2]=='0') bossOn=false;
     else bossOn=true;
-    for(int i=4;linea[i]!='\0';i++)dato[i-4]=linea[i];
-    puntaje= stoi(dato);
-    dato="";
-    getline(file,linea);
+    for(int i=4;linea[i]!='\0';i++){
+        dato[i-4]=linea[i];
+    }
+    puntaje=atoi(dato);
+    for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
+    file.getline(linea,50);
 
     while(linea[contador]!=';'){
         dato[contador]=linea[contador];
         contador++;
     }
-    player1->setVida(stoi(dato));
-    dato=linea[contador+1];
-    player1->setPoder(stoi(dato));
+
+    player1->setVida(atoi(dato));
+    for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
+    dato[0]=linea[contador+1];
+    player1->setPoder(atoi(dato));
     contador+=3;
 
     while(linea[contador]!=';'){
@@ -143,21 +149,22 @@ void MainWindow::cargarDatos(string archivo){
         dato2[contador2]=linea[contador];
         contador++;  contador2++;
     }
-    player1->setPos(stoi(dato),stoi(dato2));
+    player1->setPos(atoi(dato),atoi(dato2));
     contador=0;
     contador2=0;
-    dato=""; dato2="";
+    for(int i=0;dato[i]!='\0';i++) dato[i]='\0'; for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
 
     if(!singlePlayer){
-        getline(file,linea);
+        file.getline(linea,50);
 
         while(linea[contador]!=';'){
             dato[contador]=linea[contador];
             contador++;
         }
-        player2->setVida(stoi(dato));
-        dato=linea[contador+1];
-        player2->setPoder(stoi(dato));
+        player2->setVida(atoi(dato));
+        for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
+        dato[0]=linea[contador+1];
+        player2->setPoder(atoi(dato));
         contador+=3;
 
         while(linea[contador]!=';'){
@@ -170,21 +177,21 @@ void MainWindow::cargarDatos(string archivo){
             dato2[contador2]=linea[contador];
             contador++;  contador2++;
         }
-        player2->setPos(stoi(dato),stoi(dato2));
+        player2->setPos(atoi(dato),atoi(dato2));
         contador=0;
         contador2=0;
-        dato=""; dato2="";
+        for(int i=0;dato[i]!='\0';i++) dato[i]='\0'; for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
     }
 
     if(bossOn){
-        getline(file,linea);
+        file.getline(linea,50);
 
         while(linea[contador]!=';'){
             dato[contador]=linea[contador];
             contador++;
         }
-        jefe->setVida(stoi(dato));
-        dato="";
+        jefe->setVida(atoi(dato));
+        for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
         contador++;
 
         while(linea[contador]!=';'){
@@ -197,27 +204,28 @@ void MainWindow::cargarDatos(string archivo){
             dato2[contador2]=linea[contador];
             contador++;  contador2++;
         }
-        jefe->setPos(stoi(dato),stoi(dato2));
+        jefe->setPos(atoi(dato),atoi(dato2));
         contador=0;
         contador2=0;
-        dato=""; dato2="";
+        for(int i=0;dato[i]!='\0';i++) dato[i]='\0'; for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
     }
-
-    while(file.good()){
+    file.getline(linea,50);
+    while(file.good()&&linea[0]!='\0'){
         contador=1;
         contador2=0;
-        dato="";  dato2="";
-        getline(file,linea);
+        for(int i=0;dato[i]!='\0';i++) dato[i]='\0';  for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
+
         if(linea[0]=='*'){
-            proyectil* balita = new proyectil;
+            proyectil * balita= new proyectil;
             balas.push_back(balita);
+            scene->addItem(balita);
             while(linea[contador]!=';'){
                 dato[contador-1]=linea[contador];
                 contador++;
             }
             contador++;
-            balita->setEfecto(stoi(dato));
-            dato="";
+            balita->setEfecto(atoi(dato));
+            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
             while(linea[contador]!=';'){
                 dato[contador2]=linea[contador];
                 contador++; contador2++;
@@ -228,25 +236,26 @@ void MainWindow::cargarDatos(string archivo){
                 dato2[contador2]=linea[contador];
                 contador++;  contador2++;
             }
-            balita->setPos(stoi(dato),stoi(dato2));
+            balita->setPos(atoi(dato),atoi(dato2));
         }
         else if(linea[0]=='#'){
-            drop * cosa = new drop(true);
+            drop* cosa= new drop(true);
             drops.push_back(cosa);
+            scene->addItem(cosa);
             while(linea[contador]!=';'){
                 dato[contador-1]=linea[contador];
                 contador++;
             }
-            cosa->setType(dato);
-            dato="";
+            cosa->setType(string(dato));
+            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
             contador++;
 
             while(linea[contador]!=';'){
                 dato[contador2]=linea[contador];
                 contador++;
             }
-            cosa->setEfecto(stoi(dato));
-            dato="";
+            cosa->setEfecto(atoi(dato));
+            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
             contador++;
             contador2=0;
 
@@ -260,10 +269,10 @@ void MainWindow::cargarDatos(string archivo){
                 dato2[contador2]=linea[contador];
                 contador++;
             }
-            cosa->setVel(stof(dato),stof(dato2));
+            cosa->setVel(atof(dato),atof(dato2));
             contador++;
             contador2=0;
-            dato=""; dato2="";
+            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';  for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
             //&&&&&&&&&&&&&6
 
             while(linea[contador]!=';'){
@@ -276,18 +285,15 @@ void MainWindow::cargarDatos(string archivo){
                 dato2[contador2]=linea[contador];
                 contador++;
             }
-            cosa->setPos(stoi(dato),stoi(dato2));
+            cosa->setPos(atoi(dato),atoi(dato2));
 
         }
+        file.getline(linea,50);
     }
 
 
 
-
-
 }
-
-
 
 void MainWindow::animar(){
     ui->hp->display(QString::number(player1->Vida()));
@@ -327,12 +333,13 @@ void MainWindow::animar(){
             if(drops.at(i)->collidesWithItem(player1)||drops.at(i)->collidesWithItem(player2)){
                 if(drops.at(i)->collidesWithItem(player1))
                 player1->setVida(player1->Vida()-drops.at(i)->Efecto());
-                if(drops.at(i)->collidesWithItem(player2)){
+                if(drops.at(i)->collidesWithItem(player2))
                     player2->setVida(player2->Vida()-drops.at(i)->Efecto());
+
                 scene->removeItem(drops.at(i));
                 drops.at(i)->~drop();
                 drops.removeAt(i);
-                }
+
             }
             else if(drops.at(i)->y()>500){
                 scene->removeItem(drops.at(i));

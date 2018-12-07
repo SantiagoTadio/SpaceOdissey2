@@ -32,12 +32,14 @@ void jugador::shoot()
         shot->setMedia(QUrl("qrc:/music/shot1.mp3"));
         proyectil* bala = new proyectil;
         lista->push_back(bala);
+        shot->play();
 
         bala->setPos(x()+35,y()-16);
         scene()->addItem(bala);
     }
     else if(Power()==2){
         shot->setMedia(QUrl("qrc:/music/shot2.mp3"));
+        shot->play();
         proyectil* bala = new proyectil;
         proyectil* bala2 = new proyectil;
         lista->push_back(bala);
@@ -50,6 +52,7 @@ void jugador::shoot()
     }
     else if(Power()==3){
         shot->setMedia(QUrl("qrc:/music/shot3.mp3"));
+        shot->play();
         proyectil* bala = new proyectil;
         proyectil* bala2 = new proyectil;
         proyectil* bala3 = new proyectil;
