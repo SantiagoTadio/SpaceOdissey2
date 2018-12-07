@@ -24,15 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(spawning,SIGNAL(timeout()),this,SLOT(spawn()));
    spawning->start(1500);
 
-   player1->setPos(385,411);
-   player2->setPos(385,411);
-   ui->graphicsView->scene()->addItem(player1);
-   if(!singlePlayer)
-   ui->graphicsView->scene()->addItem(player2);
-   else{
-       ui->label_3->close();
-       ui->hp2->close();
-   }
+
 
 
    control->pj1=player1;
@@ -41,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
    control->setFlag(QGraphicsItem::ItemIsFocusable);
    control->setFocus();
-   cargarDatos("datos.txt");
+
 
    musica->play();
 }
@@ -91,7 +83,7 @@ void MainWindow::reanudar()
 
 void MainWindow::guardarDatos()
 {
-    ofstream archivo("datos.txt");
+    ofstream archivo(partida);
     if(singlePlayer) archivo<<"1;";
     else archivo<<"2;";
     if(bossOn)archivo<<"1;";
@@ -110,10 +102,10 @@ void MainWindow::guardarDatos()
     }
 }
 
-void MainWindow::cargarDatos(string archivo){
+void MainWindow::cargarDatos(){
 
 
-    ifstream file(archivo);
+    ifstream file(partida);
     char linea[50]="", dato[15]="", dato2[10]="";
     int contador=0, contador2=0;
     file.getline(linea,50);
@@ -124,6 +116,15 @@ void MainWindow::cargarDatos(string archivo){
     for(int i=4;linea[i]!='\0';i++){
         dato[i-4]=linea[i];
     }
+
+    ui->graphicsView->scene()->addItem(player1);
+    if(!singlePlayer)
+    ui->graphicsView->scene()->addItem(player2);
+    else{
+        ui->label_3->close();
+        ui->hp2->close();
+    }
+
     puntaje=atoi(dato);
     for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
     file.getline(linea,50);
@@ -329,7 +330,8 @@ void MainWindow::animar(){
 
     for(int i=drops.size()-1;i>=0;i--){
         if(drops.at(i)->Efecto()>0){
-            drops.at(i)->move(1,player1->x(),player1->y(),player2->x(),player2->y());
+            if(singlePlayer) drops.at(i)->move(1,player1->x(),player1->y());
+            else drops.at(i)->move(1,player1->x(),player1->y(),player2->x(),player2->y());
             if(drops.at(i)->collidesWithItem(player1)||drops.at(i)->collidesWithItem(player2)){
                 if(drops.at(i)->collidesWithItem(player1))
                 player1->setVida(player1->Vida()-drops.at(i)->Efecto());
@@ -363,3 +365,5 @@ void MainWindow::on_pushButton_2_clicked()
 {
     reanudar();
 }
+
+

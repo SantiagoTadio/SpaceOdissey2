@@ -10,6 +10,7 @@
 #include <QTimer>
 #include "controles.h"
 #include "usuario.h"
+#include <QGraphicsRectItem>
 #include <fstream>
 #include <sstream>
 
@@ -26,7 +27,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
+public slots:
 
     void spawn();
     void animar();
@@ -34,8 +35,8 @@ private slots:
     void pausa();
     void reanudar();
     void guardarDatos();
-    void cargarDatos(string nombreArchivo);
-
+    void cargarDatos();
+    void setPartida(string p){partida=p;}
     void on_pushButton_2_clicked();
 
 
@@ -52,12 +53,14 @@ private:
     jugador * player1 = new jugador(&balas);
     jugador * player2 = new jugador(&balas);
     personaje * jefe = new personaje;
+    QGraphicsRectItem * escudo= new QGraphicsRectItem, * gelatina= new QGraphicsRectItem;
 
     QTimer * animacion = new QTimer;
     QTimer * spawning = new QTimer;
 
     bool singlePlayer, bossOn;
     int puntaje=0;
+    string partida;
 };
 
 #endif // MAINWINDOW_H

@@ -29,17 +29,23 @@ SOURCES += \
     jugador.cpp \
     proyectil.cpp \
     controles.cpp \
-    usuario.cpp
+    usuario.cpp \
+    registro.cpp \
+    inicio.cpp
 
 HEADERS += \
         mainwindow.h \
     jugador.h \
     proyectil.h \
     controles.h \
-    usuario.h
+    usuario.h \
+    registro.h \
+    inicio.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    registro.ui \
+    inicio.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

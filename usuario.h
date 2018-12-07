@@ -1,22 +1,21 @@
 #ifndef USUARIO_H
 #define USUARIO_H
-
-#include <iostream>
+#include <string>
 #include <QList>
 
 using namespace std;
 
+
 class usuario
 {
 public:
-    usuario();
-    QList<string*> partidas;
-    string Alias(){return  alias;}
-    string Clave(){return  clave;}
-    void setAlias(string nom){alias = nom;}
-    void setClave(string con){clave= con;}
+    usuario(string _alias,string _password);
+    string get_alias();
+    string get_pass();
 private:
-    string alias, clave;
+    string alias;
+    string password;
+
 
 };
 
