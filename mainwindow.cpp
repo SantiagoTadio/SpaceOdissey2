@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "menupausa.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -11,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
    scene = new QGraphicsScene;
-   QMediaPlayer * musica = new QMediaPlayer;
+
    musica->setMedia(QUrl("qrc:/music/audio.mp3"));
    scene->setSceneRect(0,0,821,501);
    scene->setBackgroundBrush(QBrush(QImage(":/images/bg2.png")));
@@ -23,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
    animacion->start(50);
    connect(spawning,SIGNAL(timeout()),this,SLOT(spawn()));
    spawning->start(1500);
+   connect(powers,SIGNAL(timeout()),this,SLOT(crearPoder()));
+   powers->start(5000);
 
 
 
@@ -48,18 +51,30 @@ MainWindow::~MainWindow()
     delete jefe;
     delete animacion;
     delete spawning;
+    delete musica;
+
 }
 
 void MainWindow::spawn()
 {
-    if(puntaje==100) spawning->start(1200);
-    else if(puntaje==500 ) spawning->start(900);
-    else if(puntaje==1000)spawning->start(500);
+    if(puntaje>100&&puntaje<=500) spawning->start(1200);
+    else if(puntaje>500&&puntaje<=1000 ) spawning->start(900);
+    else if(puntaje>1000)spawning->start(500);
     int px = 90+rand()%631;
     drop * cosa = new drop(true);
     cosa->setPos(px,0);
     scene->addItem(cosa);
     drops.push_back(cosa);
+}
+
+void MainWindow::crearPoder(){
+
+    int px = 90+rand()%631;
+    drop * cosa = new drop(false);
+    cosa->setPos(px,0);
+    scene->addItem(cosa);
+    pows.push_back(cosa);
+
 }
 
 void MainWindow::on_pushButton_clicked(){
@@ -70,15 +85,23 @@ void MainWindow::pausa()
 {
     animacion->stop();
     spawning->stop();
+    powers->stop();
+    musica->stop();
     control->encendido(false);
-    guardarDatos();
+    MenuPausa *men;
+    men=new MenuPausa();
+    men->setmain(this);
+    men->show();
+
 }
 
 void MainWindow::reanudar()
 {
     animacion->start(50);
     spawning->start(1000);
+    powers->start(5000);
     control->encendido(true);
+    musica->play();
 }
 
 void MainWindow::guardarDatos()
@@ -93,13 +116,14 @@ void MainWindow::guardarDatos()
     archivo<<player1->Vida()<<";"<<player1->Power()<<";"<<player1->x()<<";"<<player1->y()<<endl;
     if(!singlePlayer) archivo<<player2->Vida()<<";"<<player2->Power()<<";"<<player2->x()<<";"<<player2->y()<<endl;
     if(bossOn) archivo<<jefe->Vida()<<";"<<jefe->x()<<";"<<jefe->y()<<endl;
-
+/*
     for(int i= balas.size()-1;i>=0;i--){
         archivo<<"*"<<balas.at(i)->Efecto()<<";"<<balas.at(i)->x()<<";"<<balas.at(i)->y()<<endl;
     }
     for(int i =drops.size()-1;i>=0;i--){
         archivo<<"#"<<drops.at(i)->Type()<<";"<<drops.at(i)->Efecto()<<";"<<drops.at(i)->VelX()<<";"<<drops.at(i)->VelY()<<";"<<drops.at(i)->x()<<";"<<drops.at(i)->y()<<endl;
     }
+    */
 }
 
 void MainWindow::cargarDatos(){
@@ -118,8 +142,12 @@ void MainWindow::cargarDatos(){
     }
 
     ui->graphicsView->scene()->addItem(player1);
-    if(!singlePlayer)
-    ui->graphicsView->scene()->addItem(player2);
+
+    if(!singlePlayer){
+         ui->graphicsView->scene()->addItem(player2);
+         control->setMultiplayer(true);
+    }
+
     else{
         ui->label_3->close();
         ui->hp2->close();
@@ -210,6 +238,7 @@ void MainWindow::cargarDatos(){
         contador2=0;
         for(int i=0;dato[i]!='\0';i++) dato[i]='\0'; for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
     }
+    /*
     file.getline(linea,50);
     while(file.good()&&linea[0]!='\0'){
         contador=1;
@@ -291,7 +320,7 @@ void MainWindow::cargarDatos(){
         }
         file.getline(linea,50);
     }
-
+    */
 
 
 }
@@ -359,11 +388,41 @@ void MainWindow::animar(){
         }
 
     }
+    for(int i=pows.size()-1;i>=0;i--){
+        pows.at(i)->move();
+        if(pows.at(i)->collidesWithItem(player2)||pows.at(i)->collidesWithItem(player1)){
+
+            if(pows.at(i)->Type()=="cura"){
+                if(pows.at(i)->collidesWithItem(player1)) player1->setVida(player1->VidaMax());
+                if(pows.at(i)->collidesWithItem(player2)) player2->setVida(player2->VidaMax());
+            }
+            else if(pows.at(i)->Type()=="veneno"){
+                if(pows.at(i)->collidesWithItem(player1)) player1->setVida(1);
+                if(pows.at(i)->collidesWithItem(player2)) player2->setVida(1);
+            }
+            else if(pows.at(i)->Type()=="mejora"){
+                if(pows.at(i)->collidesWithItem(player1)) player1->setPoder(player1->Power()+1);
+                if(pows.at(i)->collidesWithItem(player2)) player2->setPoder(player2->Power()+1);
+            }
+
+
+
+
+            scene->removeItem(pows.at(i));
+            pows.at(i)->~drop();
+            pows.removeAt(i);
+
+        }
+        else if(pows.at(i)->y()>500){
+            scene->removeItem(pows.at(i));
+            pows.at(i)->~drop();
+            pows.removeAt(i);
+
+        }
+
+    }
+
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
-    reanudar();
-}
 
 

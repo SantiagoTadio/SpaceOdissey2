@@ -20,13 +20,14 @@ public:
     jugador* pj1, *pj2;
     QTimer* timer = new QTimer;
     void encendido(bool x){on=x;}
+    void setMultiplayer(bool p){multiplayer=p;}
 
 public slots:
     void timeOutEvent();
 
 private:
     QMap<int,bool>keys;
-    bool on;
+    bool on, multiplayer;
 
 
 };

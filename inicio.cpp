@@ -1,5 +1,6 @@
 #include "inicio.h"
 #include "ui_inicio.h"
+#include "unodos.h"
 
 inicio::inicio(QWidget *parent) :
     QDialog(parent),
@@ -14,136 +15,80 @@ inicio::~inicio()
     delete ui;
 }
 
-void inicio::cargarDatos()
+void inicio::setchek(int _chek){
+    chek=_chek;
+}
+
+int inicio::getchek(){
+    return chek;
+}
+
+void inicio::cargarDatos(string datos)
 {
-    for(int i=1;i<=5;i++){
-        string file= alias_Usu_jug+"_"+"Partida"+char(i+48)+".txt";
+
         char puntaje[10]="", jugadores[2] ="";
         int j=4;
-        ifstream archivo(file);
-        cout<<file;
+        ifstream archivo(datos);
+        ui->cargar->setVisible(true);
         if(archivo.is_open()){
-            getline(archivo,file);
+            getline(archivo,datos);
 
-            jugadores[0]=file[0];
-            while(file[j]!='\0'){
-                puntaje[j-4]=file[j];
+            jugadores[0]=datos[0];
+            while(datos[j]!='\0'){
+                puntaje[j-4]=datos[j];
                 j++;
             }
-            file= "Puntaje: "+string(puntaje)+'\n'+"Numero de Jugadores: "+string(jugadores);
+            if(jugadores[0]=='1') datos= "Puntaje: "+string(puntaje)+"\nUn Jugador";
+            else if (jugadores[0]=='2') datos= "Puntaje: "+string(puntaje)+"\nDos Jugadores";
 
-            if(i==1) ui->label->setText(QString::fromStdString(file));
-            if(i==2) ui->label_2->setText(QString::fromStdString(file));
-            if(i==3) ui->label_3->setText(QString::fromStdString(file));
-            if(i==4) ui->label_4->setText(QString::fromStdString(file));
-            if(i==5) ui->label_5->setText(QString::fromStdString(file));
 
+            ui->label->setText(QString::fromStdString(datos));
 
         }
         else{
-            if(i==1) ui->label->setText(QString::fromStdString("No hay partida guardada"));
-            if(i==2) ui->label_2->setText(QString::fromStdString("No hay partida guardada"));
-            if(i==3) ui->label_3->setText(QString::fromStdString("No hay partida guardada"));
-            if(i==4) ui->label_4->setText(QString::fromStdString("No hay partida guardada"));
-            if(i==5) ui->label_5->setText(QString::fromStdString("No hay partida guardada"));
+            ui->cargar->setVisible(false);
+            ui->label->setText(QString::fromStdString("Nueva Partida"));
         }
 
-    }
+
 }
 
 void inicio::on_pushButton_clicked()
 {
-
-    string file= alias_Usu_jug+"_"+"Partida"+char(1+48)+".txt";
-    ifstream archivo(file);
-    MainWindow *w= new MainWindow;
-    if(archivo.is_open()){
-
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    else{
-        ofstream partida(file);
-        partida<<"2;0;0\n1000;1;200;411\n1000;1;300;411";
-        partida.close();
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    archivo.close();
-    this->close();
+    string linea = alias_Usu_jug+"_Partida1.txt";
+    setchek(1);
+    cargarDatos(linea);
 }
 
 void inicio::on_pushButton_2_clicked()
 {
-    string file= alias_Usu_jug+"_"+"Partida"+char(2+48)+".txt";
-    ifstream archivo(file);
-    MainWindow *w= new MainWindow;
-    if(archivo.is_open()){
-
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    else{
-        ofstream partida(file);
-        partida<<"2;0;0\n1000;1;200;411\n1000;1;300;411";
-        partida.close();
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    archivo.close();
-    this->close();
+    string linea = alias_Usu_jug+"_Partida2.txt";
+    setchek(2);
+    cargarDatos(linea);
 }
 
 void inicio::on_pushButton_3_clicked()
 {
-    string file= alias_Usu_jug+"_"+"Partida"+char(3+48)+".txt";
-    ifstream archivo(file);
-    MainWindow *w= new MainWindow;
-    if(archivo.is_open()){
-
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    else{
-        ofstream partida(file);
-        partida<<"2;0;0\n1000;1;200;411\n1000;1;300;411";
-        partida.close();
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    archivo.close();
-    this->close();
+    string linea = alias_Usu_jug+"_Partida3.txt";
+    setchek(3);
+    cargarDatos(linea);
 }
 
 void inicio::on_pushButton_4_clicked()
 {
-    string file= alias_Usu_jug+"_"+"Partida"+char(4+48)+".txt";
-    ifstream archivo(file);
-    MainWindow *w= new MainWindow;
-    if(archivo.is_open()){
-
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    else{
-        ofstream partida(file);
-        partida<<"2;0;0\n1000;1;200;411\n1000;1;300;411";
-        partida.close();
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
-    }
-    archivo.close();
-    this->close();
+    string linea = alias_Usu_jug+"_Partida4.txt";
+    setchek(4);
+    cargarDatos(linea);
 }
 
+void inicio::on_pushButton_5_clicked()
+{
+    string linea = alias_Usu_jug+"_Partida5.txt";
+    setchek(5);
+    cargarDatos(linea);
+}
+
+/*
 void inicio::on_pushButton_5_clicked()
 {
     string file= alias_Usu_jug+"_"+"Partida"+char(5+48)+".txt";
@@ -164,5 +109,32 @@ void inicio::on_pushButton_5_clicked()
         w->cargarDatos();
     }
     archivo.close();
+    this->close();
+}
+*/
+
+void inicio::on_cargar_clicked()
+{
+    string file= alias_Usu_jug+"_"+"Partida"+char(chek+48)+".txt";
+    ifstream archivo(file);
+    MainWindow *w= new MainWindow;
+    if(archivo.is_open()){
+
+        w->show();
+        w->setPartida(file);
+        w->cargarDatos();
+    }
+
+    archivo.close();
+    this->close();
+}
+
+void inicio::on_nuevo_clicked()
+{
+    UnoDos *in;
+    in=new UnoDos();
+    in->show();
+    in->setalias(alias_Usu_jug);
+    in->setchek(getchek());
     this->close();
 }

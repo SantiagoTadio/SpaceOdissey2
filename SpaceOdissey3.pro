@@ -31,7 +31,9 @@ SOURCES += \
     controles.cpp \
     usuario.cpp \
     registro.cpp \
-    inicio.cpp
+    inicio.cpp \
+    unodos.cpp \
+    menupausa.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,12 +42,16 @@ HEADERS += \
     controles.h \
     usuario.h \
     registro.h \
-    inicio.h
+    inicio.h \
+    unodos.h \
+    menupausa.h
 
 FORMS += \
         mainwindow.ui \
     registro.ui \
-    inicio.ui
+    inicio.ui \
+    unodos.ui \
+    menupausa.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

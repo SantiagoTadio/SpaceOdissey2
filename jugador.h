@@ -37,7 +37,7 @@ public:
     void shoot();
     ~jugador();
     int Power(){return power;}
-    void setPoder(int p){power=p; vidaMax=1000*p; if(Vida()>vidaMax){setVida(vidaMax);}}
+    void setPoder(int p){if(p<4){power=p; vidaMax=1000*p; if(Vida()>vidaMax){setVida(vidaMax);}}}
     int VidaMax(){return vidaMax;}
     void setVidaMax(int v){vidaMax=v;}
 

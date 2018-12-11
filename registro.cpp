@@ -140,6 +140,7 @@ void registro::on_pushButton_2_clicked()
     pass=ui->lineEdit_3->text();
 
 
+
     if(!alias.isDetached() && !pass.isEmpty()){
         bool cond=veriUs(alias.toStdString(),pass.toStdString());
         if(cond){
@@ -147,7 +148,9 @@ void registro::on_pushButton_2_clicked()
             in=new inicio();
             in->show();
             in->setUsuario(alias.toStdString());
-            in->cargarDatos();
+            string linea = alias.toStdString()+"_Partida1.txt";
+            in->setchek(1);
+            in->cargarDatos(linea);
             this->close();
 
         }

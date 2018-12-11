@@ -16,17 +16,19 @@ void controles::timeOutEvent()
         }
 
 
+        if(multiplayer){
+            if(keys[Qt::Key_A]&& pj2->x()>10){
+                pj2->setPos(pj2->x()-10,pj2->y());
+            }
+            if(keys[Qt::Key_D]&& pj2->x()<730){
+                pj2->setPos(pj2->x()+10,pj2->y());
+            }
+            if(keys[Qt::Key_Control]){
+                pj2->shoot();
 
-        if(keys[Qt::Key_A]&& pj2->x()>10){
-            pj2->setPos(pj2->x()-10,pj2->y());
+            }
         }
-        if(keys[Qt::Key_D]&& pj2->x()<730){
-            pj2->setPos(pj2->x()+10,pj2->y());
-        }
-        if(keys[Qt::Key_Control]){
-            pj2->shoot();
 
-        }
     }
 
 
@@ -36,5 +38,5 @@ void controles::timeOutEvent()
 controles::controles(){
     timer->start(50);
     connect(timer,SIGNAL(timeout()),this,SLOT(timeOutEvent()));
-    on=true;
+    on=true;  multiplayer=false;
 }

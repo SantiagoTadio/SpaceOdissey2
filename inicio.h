@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <fstream>
 #include "mainwindow.h"
+#include "unodos.h"
 
 using namespace std;
 namespace Ui {
@@ -19,7 +20,9 @@ public:
     explicit inicio(QWidget *parent = nullptr);
     void setUsuario(string u){alias_Usu_jug=u;}
     ~inicio();
-    void cargarDatos();
+    void cargarDatos(string datos);
+    void setchek(int _chek);
+    int getchek();
 
 private slots:
     void on_pushButton_clicked();
@@ -32,9 +35,14 @@ private slots:
 
     void on_pushButton_5_clicked();
 
+    void on_cargar_clicked();
+
+    void on_nuevo_clicked();
+
 private:
     Ui::inicio *ui;
     string alias_Usu_jug;
+    int chek;
 };
 
 #endif // INICIO_H

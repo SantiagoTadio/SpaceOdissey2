@@ -26,6 +26,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    string Partida(){return partida;}
 
 public slots:
 
@@ -37,7 +38,8 @@ public slots:
     void guardarDatos();
     void cargarDatos();
     void setPartida(string p){partida=p;}
-    void on_pushButton_2_clicked();
+    void crearPoder();
+
 
 
 
@@ -48,7 +50,7 @@ private:
 
     QList<proyectil*> balas;
     QList<drop*> drops;
-    QList<usuario*> usuarios;
+    QList<drop*> pows;
 
     jugador * player1 = new jugador(&balas);
     jugador * player2 = new jugador(&balas);
@@ -57,10 +59,14 @@ private:
 
     QTimer * animacion = new QTimer;
     QTimer * spawning = new QTimer;
+    QTimer * powers = new QTimer;
+
+    QMediaPlayer * musica = new QMediaPlayer;
 
     bool singlePlayer, bossOn;
     int puntaje=0;
     string partida;
+
 };
 
 #endif // MAINWINDOW_H

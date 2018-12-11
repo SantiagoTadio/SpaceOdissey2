@@ -60,6 +60,7 @@ private:
 
 public slots:
     void move(float dt,int posX, int posY, int posX2=10000, int posY2=10000);
+    void move(){setPos(x(),y()+5);}
     void moveBack(float dt,int posX, int posY, int posX2=10000, int posY2=10000);
 
 
