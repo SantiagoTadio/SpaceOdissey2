@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.7.0, 2018-12-10T19:32:39. -->
+<!-- Written by QtCreator 4.7.0, 2018-12-11T00:06:00. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -290,11 +290,11 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">SpaceOdissey3</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SpaceOdissey32</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/Usuario/Desktop/SpaceOdissey2-49ca0fac32285217372081a1e3ad60e4cb83b6ad/SpaceOdissey2-49ca0fac32285217372081a1e3ad60e4cb83b6ad/SpaceOdissey3.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/Usuario/Desktop/Universidad/Segundo semestre/info ll/PROYECTO FINAL/SpaceOdissey3/SpaceOdissey3.pro</value>
     <value type="bool" key="QmakeProjectManager.QmakeRunConfiguration.UseLibrarySearchPath">true</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
-    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">../../../../../SpaceOdissey2-49ca0fac32285217372081a1e3ad60e4cb83b6ad/SpaceOdissey2-49ca0fac32285217372081a1e3ad60e4cb83b6ad/SpaceOdissey3.pro</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">SpaceOdissey3.pro</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory.default"></value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
