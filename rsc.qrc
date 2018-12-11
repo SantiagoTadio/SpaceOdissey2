@@ -10,6 +10,8 @@
         <file>damage.png</file>
         <file>powerUP.png</file>
         <file>Sin título-1.png</file>
+        <file>antiG.png</file>
+        <file>hole.png</file>
     </qresource>
     <qresource prefix="/music">
         <file>audio.mp3</file>

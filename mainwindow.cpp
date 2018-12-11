@@ -2,13 +2,14 @@
 #include "ui_mainwindow.h"
 #include "menupausa.h"
 
+#define PI 3.14159265359
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    holeOn=false;
 
 
    scene = new QGraphicsScene;
@@ -52,6 +53,8 @@ MainWindow::~MainWindow()
     delete animacion;
     delete spawning;
     delete musica;
+    delete varios;
+    delete recto;
 
 }
 
@@ -75,6 +78,28 @@ void MainWindow::crearPoder(){
     scene->addItem(cosa);
     pows.push_back(cosa);
 
+}
+
+void MainWindow::esconderRecto()
+{
+    scene->removeItem(recto);
+    recto->setRect(0,0,0,0);
+    varios->stop();
+
+}
+
+void MainWindow::esconderGelato()
+{
+    scene->removeItem(gelato);
+    gelato->setRect(0,0,0,0);
+    varios->stop();
+}
+
+void MainWindow::esconderAgujero()
+{
+    scene->removeItem(hole);
+    hole->setRect(0,0,0,0);
+    holeOn=false;
 }
 
 void MainWindow::on_pushButton_clicked(){
@@ -329,6 +354,9 @@ void MainWindow::animar(){
     ui->hp->display(QString::number(player1->Vida()));
     if(!singlePlayer) ui->hp2->display(QString::number(player2->Vida()));
     ui->puntos->display(QString::number(puntaje));
+
+
+
     for(int w=balas.size()-1;w>=0;w--){
         balas.at(w)->move();
         if(balas.at(w)->collidesWithItem(jefe)){
@@ -359,8 +387,28 @@ void MainWindow::animar(){
 
     for(int i=drops.size()-1;i>=0;i--){
         if(drops.at(i)->Efecto()>0){
-            if(singlePlayer) drops.at(i)->move(1,player1->x(),player1->y());
-            else drops.at(i)->move(1,player1->x(),player1->y(),player2->x(),player2->y());
+            if(drops.at(i)->collidesWithItem(recto)){
+                drops.at(i)->setVel(drops.at(i)->VelX(),(drops.at(i)->VelY())*(-0.8));
+            }
+            if(drops.at(i)->collidesWithItem(gelato)){
+                float Vcuad, angulo, vy=drops.at(i)->VelY(), vx=drops.at(i)->VelX(), ax, ay;
+                int radio, masa;
+                if(drops.at(i)->Type()=="asteroideB"){radio=2;masa=100;}
+                else if(drops.at(i)->Type()=="asteroideS"){radio=1;masa=30;}
+                angulo= atan2(vy,vx);
+                Vcuad= (vy*vy)+(vx*vx);
+                ax= -(10*Vcuad*(radio*radio)*cos(angulo))/masa;
+                ay= -(10*Vcuad*(radio*radio)*sin(angulo))/masa;
+
+                drops.at(i)->setVel(drops.at(i)->VelX()+(ax*0.1),drops.at(i)->VelY()+(ay*0.1));
+            }
+
+            if(holeOn) drops.at(i)->move(1,hole->x(),hole->y());
+            else{
+                if(singlePlayer) drops.at(i)->move(1,player1->x(),player1->y());
+                else drops.at(i)->move(1,player1->x(),player1->y(),player2->x(),player2->y());
+            }
+
             if(drops.at(i)->collidesWithItem(player1)||drops.at(i)->collidesWithItem(player2)){
                 if(drops.at(i)->collidesWithItem(player1))
                 player1->setVida(player1->Vida()-drops.at(i)->Efecto());
@@ -378,6 +426,11 @@ void MainWindow::animar(){
                 drops.removeAt(i);
                 player1->setVida(player1->Vida()-drops.at(i)->Efecto());
                 if(!singlePlayer) player2->setVida(player2->Vida()-drops.at(i)->Efecto());
+            }
+            else if(drops.at(i)->collidesWithItem(hole)){
+                scene->removeItem(drops.at(i));
+                drops.at(i)->~drop();
+                drops.removeAt(i);
             }
 
         }
@@ -403,6 +456,29 @@ void MainWindow::animar(){
             else if(pows.at(i)->Type()=="mejora"){
                 if(pows.at(i)->collidesWithItem(player1)) player1->setPoder(player1->Power()+1);
                 if(pows.at(i)->collidesWithItem(player2)) player2->setPoder(player2->Power()+1);
+            }
+            else if(pows.at(i)->Type()=="escudo"){
+                 recto->setRect(0,0,720,30);
+                 recto->setBrush(Qt::green);
+                 recto->setPos(50,300);
+                 scene->addItem(recto);
+                 QTimer::singleShot(10000,this,SLOT(esconderRecto()));
+            }
+            else if(pows.at(i)->Type()=="gelato"){
+                gelato->setRect(0,0,720,150);
+                gelato->setBrush(Qt::blue);
+                gelato->setPos(50,150);
+                scene->addItem(gelato);
+                QTimer::singleShot(10000,this,SLOT(esconderGelato()));
+            }
+            else if(pows.at(i)->Type()=="agujero"){
+                hole->setRect(0,0,50,50);
+                hole->setBrush(Qt::black);
+                hole->setPos(380,225);
+                scene->addItem(hole);
+                holeOn=true;
+                QTimer::singleShot(10000,this,SLOT(esconderAgujero()));
+
             }
 
 

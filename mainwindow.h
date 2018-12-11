@@ -13,7 +13,9 @@
 #include <QGraphicsRectItem>
 #include <fstream>
 #include <sstream>
+#include <math.h>
 
+using namespace std;
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +41,9 @@ public slots:
     void cargarDatos();
     void setPartida(string p){partida=p;}
     void crearPoder();
+    void esconderRecto();
+    void esconderGelato();
+    void esconderAgujero();
 
 
 
@@ -55,15 +60,17 @@ private:
     jugador * player1 = new jugador(&balas);
     jugador * player2 = new jugador(&balas);
     personaje * jefe = new personaje;
-    QGraphicsRectItem * escudo= new QGraphicsRectItem, * gelatina= new QGraphicsRectItem;
+    QGraphicsRectItem * recto= new QGraphicsRectItem, *gelato= new QGraphicsRectItem;
+    QGraphicsEllipseItem * hole= new QGraphicsEllipseItem;
 
     QTimer * animacion = new QTimer;
     QTimer * spawning = new QTimer;
     QTimer * powers = new QTimer;
+    QTimer * varios = new QTimer;
 
     QMediaPlayer * musica = new QMediaPlayer;
 
-    bool singlePlayer, bossOn;
+    bool singlePlayer, bossOn, holeOn;
     int puntaje=0;
     string partida;
 

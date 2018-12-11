@@ -85,9 +85,19 @@ drop::drop(bool asteroide)
             setPixmap(QPixmap(":/images/damage.png"));
             ID="veneno";
         }
+        else if(tipo==3){
+            setPixmap(QPixmap(":/images/antiG.png"));
+            ID="gelato";
+        }
+        else if(tipo==4){
+            setPixmap(QPixmap(":/images/hole.png"));
+            ID="agujero";
+        }
         else{
+
             setPixmap(QPixmap(":/images/cura3.png"));
             ID="cura";
+
         }
 
     }
