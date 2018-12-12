@@ -13,6 +13,7 @@
         <file>antiG.png</file>
         <file>hole.png</file>
         <file>spacesplash.png</file>
+        <file>aug.png</file>
     </qresource>
     <qresource prefix="/music">
         <file>audio.mp3</file>

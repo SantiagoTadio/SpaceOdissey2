@@ -9,6 +9,7 @@
 #include "proyectil.h"
 #include <stdlib.h>
 #include <time.h>
+#include <QList>
 
 
 class personaje: public QObject,
@@ -19,8 +20,9 @@ public:
     void shoot();
     int Vida(){return vida;}
     void setVida(int v){vida=v;}
-
-
+    void setVillano(string n);
+    string nombre;
+    QList<QGraphicsPixmapItem*> cañones;
 
 private:
     int vida;

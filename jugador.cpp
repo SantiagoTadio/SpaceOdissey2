@@ -86,4 +86,12 @@ jugador::~jugador()
 personaje::personaje(){
 
     vida= 100000;
-  }
+}
+
+void personaje::setVillano(string n)
+{
+    nombre = n;
+    if(n=="augusGalactus"){
+        setPixmap(QPixmap(":/images/aug.png"));
+    }
+}
