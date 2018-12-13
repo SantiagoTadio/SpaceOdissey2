@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     holeOn=false;
-
+    CanonPausado=0;
 
    scene = new QGraphicsScene;
 
@@ -26,9 +26,15 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(spawning,SIGNAL(timeout()),this,SLOT(spawn()));
    spawning->start(1500);
    connect(powers,SIGNAL(timeout()),this,SLOT(crearPoder()));
-   powers->start(5000);
+   powers->start(10000);
+   connect(sorteo,SIGNAL(timeout()),this,SLOT(sortear()));
+   connect(disparar,SIGNAL(timeout()),this,SLOT(shoot()));
 
+   for(int i=0;i<5;i++){
+       canon* c= new canon;
+       canones.push_back(c);
 
+   }
 
 
    control->pj1=player1;
@@ -37,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
    control->setFlag(QGraphicsItem::ItemIsFocusable);
    control->setFocus();
+
+
 
 
    musica->play();
@@ -53,16 +61,58 @@ MainWindow::~MainWindow()
     delete animacion;
     delete spawning;
     delete musica;
-    delete varios;
+
     delete recto;
 
+}
+
+void MainWindow::BossActive(bool t)
+{
+    if(t){
+        bossOn=true;
+        ui->bossHp->setVisible(true);
+        jefe->setVida(5000);
+        spawning->stop();
+        powers->stop();
+        scene->addItem(jefe);
+        sortear();
+        jefe->setPos(260,20);
+
+        sorteo->start(5000);
+        disparar->start(1000);
+        for(int i=0;i<5;i++){
+
+            canones.at(i)->setPos(250+(i*64),150);
+            canones.at(i)->activo=true;
+            canones.at(i)->Muerto(false);
+            canones.at(i)->vida=2000;
+            scene->addItem(canones.at(i));
+        }
+        setCanones();
+
+    }
+    else{
+        ui->bossHp->setVisible(false);
+        bossOn=false;
+        spawning->start(1000-int(puntaje/10));
+        powers->start(10000);
+        sorteo->stop();
+        disparar->stop();
+        scene->removeItem(jefe);
+        jefe->setPos(1000,1000);
+        for(int i=0;i<5;i++){
+            canones.at(i)->setPos(1000,1000);
+            canones.at(i)->activo=false;
+            scene->removeItem(canones.at(i));
+        }
+    }
 }
 
 void MainWindow::spawn()
 {
     if(puntaje>100&&puntaje<=500) spawning->start(1200);
-    else if(puntaje>500&&puntaje<=1000 ) spawning->start(900);
-    else if(puntaje>1000)spawning->start(500);
+    else if(puntaje>500&&puntaje<=1000 ) spawning->start(1000);
+    else if(puntaje>1000)spawning->start(1000-int(puntaje/10));
     int px = 90+rand()%631;
     drop * cosa = new drop(true);
     cosa->setPos(px,0);
@@ -84,7 +134,7 @@ void MainWindow::esconderRecto()
 {
     scene->removeItem(recto);
     recto->setRect(0,0,0,0);
-    varios->stop();
+
 
 }
 
@@ -92,7 +142,7 @@ void MainWindow::esconderGelato()
 {
     scene->removeItem(gelato);
     gelato->setRect(0,0,0,0);
-    varios->stop();
+
 }
 
 void MainWindow::esconderAgujero()
@@ -112,6 +162,8 @@ void MainWindow::pausa()
     spawning->stop();
     powers->stop();
     musica->stop();
+    disparar->stop();
+    sorteo->stop();
     control->encendido(false);
     MenuPausa *men;
     men=new MenuPausa();
@@ -122,9 +174,16 @@ void MainWindow::pausa()
 
 void MainWindow::reanudar()
 {
-    animacion->start(50);
-    spawning->start(1000);
-    powers->start(5000);
+    if(!bossOn){
+        animacion->start(50);
+        spawning->start(1000-(puntaje/10));
+        powers->start(5000);
+    }
+    else{
+        disparar->start(1000);
+        sorteo->start(5000);
+    }
+
     control->encendido(true);
     musica->play();
 }
@@ -140,15 +199,13 @@ void MainWindow::guardarDatos()
 
     archivo<<player1->Vida()<<";"<<player1->Power()<<";"<<player1->x()<<";"<<player1->y()<<endl;
     if(!singlePlayer) archivo<<player2->Vida()<<";"<<player2->Power()<<";"<<player2->x()<<";"<<player2->y()<<endl;
-    if(bossOn) archivo<<jefe->Vida()<<";"<<jefe->x()<<";"<<jefe->y()<<endl;
-/*
-    for(int i= balas.size()-1;i>=0;i--){
-        archivo<<"*"<<balas.at(i)->Efecto()<<";"<<balas.at(i)->x()<<";"<<balas.at(i)->y()<<endl;
+    if(bossOn){
+        archivo<<jefe->Vida();
+        for(int i=0;i<5;i++){ archivo<<";"<<canones.at(i)->vida;}
+        archivo<<endl;
+
     }
-    for(int i =drops.size()-1;i>=0;i--){
-        archivo<<"#"<<drops.at(i)->Type()<<";"<<drops.at(i)->Efecto()<<";"<<drops.at(i)->VelX()<<";"<<drops.at(i)->VelY()<<";"<<drops.at(i)->x()<<";"<<drops.at(i)->y()<<endl;
-    }
-    */
+
 }
 
 void MainWindow::cargarDatos(){
@@ -160,8 +217,13 @@ void MainWindow::cargarDatos(){
     file.getline(linea,50);
     if(linea[0]=='1') singlePlayer=true;
     else singlePlayer=false;
-    if(linea[2]=='0') bossOn=false;
+    if(linea[2]=='0'){
+        bossOn=false;
+        ui->bossHp->setVisible(false);
+        BossActive(false);
+    }
     else bossOn=true;
+
     for(int i=4;linea[i]!='\0';i++){
         dato[i-4]=linea[i];
     }
@@ -179,6 +241,9 @@ void MainWindow::cargarDatos(){
     }
 
     puntaje=atoi(dato);
+
+    spawning->start(1000-(puntaje/10));
+
     for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
     file.getline(linea,50);
 
@@ -238,114 +303,45 @@ void MainWindow::cargarDatos(){
     }
 
     if(bossOn){
+        BossActive(true);
+        if(puntaje>=1000&&puntaje<1050) jefe->nombre="augusGalactus";
+        else if(puntaje>=3500&&puntaje<3550) jefe->nombre="augusGalactus2";
+        if(puntaje>=6500&&puntaje<6550) jefe->nombre="augusGalactus";
+        setCanones();
         file.getline(linea,50);
-
+        contador=0;
+        contador2=0;
+        for(int i=0;dato[i]!='\0';i++) dato[i]='\0'; for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
         while(linea[contador]!=';'){
             dato[contador]=linea[contador];
             contador++;
         }
         jefe->setVida(atoi(dato));
-        for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
-        contador++;
 
-        while(linea[contador]!=';'){
-            dato[contador2]=linea[contador];
-            contador++;  contador2++;
+        for(int i=0;i<5;i++){
+            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
+            contador++;
+            contador2=0;
+            if(i!=4){
+                while(linea[contador]!=';'){
+                    dato[contador2]=linea[contador];
+                    contador++;
+                    contador2++;
+                }
+            }
+            else{
+                while(linea[contador]!='\0'){
+                    dato[contador2]=linea[contador];
+                    contador++;
+                    contador2++;
+                }
+            }
+
+            canones.at(i)->vida=atoi(dato);
+            if(canones.at(i)->vida<=0) canones.at(i)->Muerto(true);
         }
-        contador2=0;
-        contador++;
-        while(linea[contador]!='\0'){
-            dato2[contador2]=linea[contador];
-            contador++;  contador2++;
-        }
-        jefe->setPos(atoi(dato),atoi(dato2));
-        contador=0;
-        contador2=0;
-        for(int i=0;dato[i]!='\0';i++) dato[i]='\0'; for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
     }
-    /*
-    file.getline(linea,50);
-    while(file.good()&&linea[0]!='\0'){
-        contador=1;
-        contador2=0;
-        for(int i=0;dato[i]!='\0';i++) dato[i]='\0';  for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
 
-        if(linea[0]=='*'){
-            proyectil * balita= new proyectil;
-            balas.push_back(balita);
-            scene->addItem(balita);
-            while(linea[contador]!=';'){
-                dato[contador-1]=linea[contador];
-                contador++;
-            }
-            contador++;
-            balita->setEfecto(atoi(dato));
-            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
-            while(linea[contador]!=';'){
-                dato[contador2]=linea[contador];
-                contador++; contador2++;
-            }
-            contador++;
-            contador2=0;
-            while(linea[contador]!='\0'){
-                dato2[contador2]=linea[contador];
-                contador++;  contador2++;
-            }
-            balita->setPos(atoi(dato),atoi(dato2));
-        }
-        else if(linea[0]=='#'){
-            drop* cosa= new drop(true);
-            drops.push_back(cosa);
-            scene->addItem(cosa);
-            while(linea[contador]!=';'){
-                dato[contador-1]=linea[contador];
-                contador++;
-            }
-            cosa->setType(string(dato));
-            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
-            contador++;
-
-            while(linea[contador]!=';'){
-                dato[contador2]=linea[contador];
-                contador++;
-            }
-            cosa->setEfecto(atoi(dato));
-            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
-            contador++;
-            contador2=0;
-
-            while(linea[contador]!=';'){
-                dato[contador2]=linea[contador];
-                contador++;
-            }
-            contador++;
-            contador2=0;
-            while(linea[contador]!=';'){
-                dato2[contador2]=linea[contador];
-                contador++;
-            }
-            cosa->setVel(atof(dato),atof(dato2));
-            contador++;
-            contador2=0;
-            for(int i=0;dato[i]!='\0';i++) dato[i]='\0';  for(int i=0;dato2[i]!='\0';i++) dato2[i]='\0';
-            //&&&&&&&&&&&&&6
-
-            while(linea[contador]!=';'){
-                dato[contador2]=linea[contador];
-                contador++;
-            }
-            contador++;
-            contador2=0;
-            while(linea[contador]!='\0'){
-                dato2[contador2]=linea[contador];
-                contador++;
-            }
-            cosa->setPos(atoi(dato),atoi(dato2));
-
-        }
-        file.getline(linea,50);
-    }
-    */
 
 
 }
@@ -354,8 +350,89 @@ void MainWindow::animar(){
     ui->hp->display(QString::number(player1->Vida()));
     if(!singlePlayer) ui->hp2->display(QString::number(player2->Vida()));
     ui->puntos->display(QString::number(puntaje));
+    if(ui->bossHp->isVisible())ui->bossHp->setText(QString::fromStdString(to_string(jefe->Vida())));
+
+    if(!bossOn){
+        if(puntaje>=1000&&puntaje<1050){
+            jefe->setVillano("augusGalactus");
+            BossActive(true);
 
 
+
+        }
+
+        else if(puntaje>=3500&&puntaje<3550){
+            jefe->setVillano("augusGalactus2");
+            BossActive(true);
+
+
+        }
+        else if(puntaje>=6500&&puntaje<6550){
+            jefe->setVillano("augusGalactus3");
+            BossActive(true);
+
+
+        }
+
+
+
+    }
+
+    if(bossOn&&jefe->Vida()<=0){
+        BossActive(false);
+        puntaje+=100;
+    }
+
+    for(int i=canones.size()-1;i>=0;i--){
+        for(int h=balas.size()-1;h>=0;h--){
+            if(canones.at(i)->collidesWithItem(balas.at(h))){
+                if(canones.at(i)->vida<=0&&canones.at(i)->activo){
+                    canones.at(i)->Muerto(true);
+                    canones.at(i)->activo=false;
+                }
+                if(canones.at(i)->activo) canones.at(i)->vida-=balas.at(h)->Efecto();
+                scene->removeItem(balas.at(h));
+                balas.at(h)->~proyectil();
+                balas.removeAt(h);
+            }
+        }
+    }
+
+
+    for(int i=balasEnemigas.size()-1;i>=0;i--){
+        balasEnemigas.at(i)->move();
+        if(balasEnemigas.at(i)->collidesWithItem(player1)||balasEnemigas.at(i)->collidesWithItem(player2)){
+            if(balasEnemigas.at(i)->collidesWithItem(player1))
+            player1->setVida(player1->Vida()-balasEnemigas.at(i)->Efecto());
+            if(balasEnemigas.at(i)->collidesWithItem(player2))
+                player2->setVida(player2->Vida()-balasEnemigas.at(i)->Efecto());
+
+            scene->removeItem(balasEnemigas.at(i));
+            balasEnemigas.at(i)->~proyectil();
+            balasEnemigas.removeAt(i);
+
+        }
+        else if(balasEnemigas.at(i)->y()>500){
+            scene->removeItem(balasEnemigas.at(i));
+            balasEnemigas.at(i)->~proyectil();
+            balasEnemigas.removeAt(i);
+        }
+        else{
+            for(int h=balas.size()-1;h>=0;h--){
+                if(balasEnemigas.at(i)->collidesWithItem(balas.at(h))){
+                    scene->removeItem(balasEnemigas.at(i));
+                    balasEnemigas.at(i)->~proyectil();
+                    balasEnemigas.removeAt(i);
+
+                    scene->removeItem(balas.at(h));
+                    balas.at(h)->~proyectil();
+                    balas.removeAt(h);
+                    break;
+                }
+            }
+        }
+
+    }
 
     for(int w=balas.size()-1;w>=0;w--){
         balas.at(w)->move();
@@ -369,7 +446,7 @@ void MainWindow::animar(){
             scene->removeItem(balas.at(w));
             balas.at(w)->~proyectil();
             balas.removeAt(w);
-            puntaje-=1;
+
         }
         else{
             for(int i=drops.size()-1;i>=0;i--){
@@ -378,7 +455,7 @@ void MainWindow::animar(){
                     scene->removeItem(balas.at(w));
                     balas.at(w)->~proyectil();
                     balas.removeAt(w);
-                    puntaje+=10;
+                    puntaje+=5;
                     break;
                 }
             }
@@ -501,4 +578,93 @@ void MainWindow::animar(){
 }
 
 
+void MainWindow::shoot()
+{
+    for(int i=canones.size()-1;i>=0;i--){
+        if(canones.at(i)->activo){
+            proyectil* p= new proyectil;
+            p->setMalo(20);
+            p->setPos(canones.at(i)->x()+26,canones.at(i)->y()+31);
+            balasEnemigas.push_back(p);
+            scene->addItem(p);
+            proyectil* h= new proyectil;
+            h->setMalo(20);
+            h->setPos(canones.at(i)->x()+4,canones.at(i)->y()+31);
+            balasEnemigas.push_back(h);
+            scene->addItem(h);
+            proyectil* j= new proyectil;
+            j->setMalo(20);
+            j->setPos(canones.at(i)->x()+48,canones.at(i)->y()+31);
+            balasEnemigas.push_back(j);
+            scene->addItem(j);
+        }
 
+    }
+
+}
+
+
+void MainWindow::sortear(){
+    int w= CanonPausado, vmax=0;
+    bool muertos=true;
+    if(canones.at(CanonPausado)->vida>0)canones.at(CanonPausado)->activo=true;
+    for(int i=canones.size()-1;i>=0;i--){
+        if(canones.at(i)->vida>0)muertos=false;
+        else canones.at(i)->Muerto(true);
+        if(canones.at(i)->vida>vmax&&i!=w) {
+            CanonPausado=i;
+            vmax=canones.at(i)->vida;
+        }
+    }
+    if(CanonPausado!=w)
+    canones.at(CanonPausado)->activo=false;
+    if(muertos){
+        disparar->stop();
+        sorteo->stop();
+
+        for(int i=canones.size()-1;i>=0;i--){
+            canones.at(i)->Muerto(true);
+            canones.at(i)->setPos(1000,1000);
+            scene->removeItem(canones.at(i));
+        }
+    }
+}
+
+void MainWindow::setCanones()
+{
+    if(jefe->Vida()>0){
+        if(jefe->nombre=="augusGalactus"){
+            for(int i=0;i<5;i++){
+
+                canones.at(i)->setPos(250+(i*64),150);
+                canones.at(i)->activo=true;
+                canones.at(i)->Muerto(false);
+                canones.at(i)->vida=2000;
+                scene->addItem(canones.at(i));
+            }
+        }
+        else if(jefe->nombre=="augusGalactus2"){
+            for(int i=0;i<5;i++){
+
+                canones.at(i)->setPos(250+(i*64),150);
+                canones.at(i)->activo=true;
+                canones.at(i)->Muerto(false);
+                canones.at(i)->vida=5000;
+
+                canones.at(i)->setPixmap(QPixmap(":/images/bossPeque2.png"));
+            }
+        }
+        else if(jefe->nombre=="augusGalactus3"){
+            for(int i=0;i<5;i++){
+
+                canones.at(i)->setPos(250+(i*64),150);
+                canones.at(i)->activo=true;
+                canones.at(i)->Muerto(false);
+                canones.at(i)->vida=7000;
+
+                canones.at(i)->setPixmap(QPixmap(":/images/bossPeque3.png"));
+            }
+        }
+    }
+
+}

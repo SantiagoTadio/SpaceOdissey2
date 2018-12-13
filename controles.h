@@ -24,10 +24,11 @@ public:
 
 public slots:
     void timeOutEvent();
-
+    void setTrue1(){shoot1=true;}
+    void setTrue2(){shoot2=true;}
 private:
     QMap<int,bool>keys;
-    bool on, multiplayer;
+    bool on, multiplayer, shoot1, shoot2;
 
 
 };

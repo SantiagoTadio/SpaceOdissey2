@@ -12,7 +12,11 @@ void controles::timeOutEvent()
             pj1->setPos(pj1->x()+10,pj1->y());
         }
         if(keys[Qt::Key_Space]){
-            pj1->shoot();
+            if(shoot1){
+                pj1->shoot();
+                shoot1=false;
+                QTimer::singleShot((150*pj1->Power()),this,SLOT(setTrue1()));
+            }
         }
 
 
@@ -24,7 +28,11 @@ void controles::timeOutEvent()
                 pj2->setPos(pj2->x()+10,pj2->y());
             }
             if(keys[Qt::Key_Control]){
-                pj2->shoot();
+                if(shoot2){
+                     pj2->shoot();
+                     shoot2=false;
+                     QTimer::singleShot((150*pj2->Power()),this,SLOT(setTrue2()));
+                }
 
             }
         }
@@ -38,5 +46,5 @@ void controles::timeOutEvent()
 controles::controles(){
     timer->start(50);
     connect(timer,SIGNAL(timeout()),this,SLOT(timeOutEvent()));
-    on=true;  multiplayer=false;
+    on=true;  multiplayer=false;  shoot1=true;   shoot2=true;
 }

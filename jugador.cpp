@@ -10,7 +10,7 @@ jugador::jugador(QList<proyectil*>* listeishon)
     setVidaMax(1000);
     shot = new QMediaPlayer;
     shot->setMedia(QUrl("qrc:/music/shot1.mp3"));
-
+    
     lista = listeishon;
     setVida(1000);
 
@@ -86,12 +86,27 @@ jugador::~jugador()
 personaje::personaje(){
 
     vida= 100000;
+
+    setPos(260,20);
+    setPixmap(QPixmap(":/images/jefeGus.png"));
+    
+
 }
 
 void personaje::setVillano(string n)
 {
     nombre = n;
     if(n=="augusGalactus"){
-        setPixmap(QPixmap(":/images/aug.png"));
+        setPixmap(QPixmap(":/images/jefeGus.png"));
+        setVida(5000);
+    }
+    else if(n=="augusGalactus2"){
+        setPixmap(QPixmap(":/images/jefeGus2.png"));
+        setVida(10000);
+    }
+    else if(n=="augusGalactus3"){
+        setPixmap(QPixmap(":/images/jefeGus3.png"));
+        setVida(20000);
     }
 }
+

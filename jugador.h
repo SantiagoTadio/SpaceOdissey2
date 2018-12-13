@@ -10,27 +10,39 @@
 #include <stdlib.h>
 #include <time.h>
 #include <QList>
+#include "canon.h"
 
 
 class personaje: public QObject,
                  public QGraphicsPixmapItem
 {
+    Q_OBJECT
 public:
     personaje();
-    void shoot();
+
     int Vida(){return vida;}
     void setVida(int v){vida=v;}
     void setVillano(string n);
+    void Activo(bool a);
+    
     string nombre;
-    QList<QGraphicsPixmapItem*> cañones;
+
+    
+public slots:
+
+    //void curar();
+
 
 private:
     int vida;
+
+
 };
 
 
 
-class jugador: public personaje
+class jugador: public QObject,
+        public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
@@ -42,9 +54,11 @@ public:
     void setPoder(int p){if(p<4){power=p; vidaMax=1000*p; if(Vida()>vidaMax){setVida(vidaMax);}}}
     int VidaMax(){return vidaMax;}
     void setVidaMax(int v){vidaMax=v;}
+    int Vida(){return vida;}
+    void setVida(int v){vida=v;}
 
 private:
-    int power,vidaMax;
+    int power,vidaMax, vida;
     QList<proyectil*> *lista;
     QMediaPlayer * shot;
 

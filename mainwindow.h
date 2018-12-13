@@ -14,6 +14,7 @@
 #include <fstream>
 #include <sstream>
 #include <math.h>
+#include "canon.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     string Partida(){return partida;}
+    void BossActive(bool t);
 
 public slots:
 
@@ -44,7 +46,9 @@ public slots:
     void esconderRecto();
     void esconderGelato();
     void esconderAgujero();
-
+    void shoot();
+    void sortear();
+    void setCanones();
 
 
 
@@ -54,8 +58,10 @@ private:
     QGraphicsScene * scene;
 
     QList<proyectil*> balas;
+    QList<proyectil*> balasEnemigas;
     QList<drop*> drops;
     QList<drop*> pows;
+    QList<canon*> canones;
 
     jugador * player1 = new jugador(&balas);
     jugador * player2 = new jugador(&balas);
@@ -66,12 +72,16 @@ private:
     QTimer * animacion = new QTimer;
     QTimer * spawning = new QTimer;
     QTimer * powers = new QTimer;
-    QTimer * varios = new QTimer;
+
+
+
+    QTimer* sorteo= new QTimer;
+    QTimer* disparar= new QTimer;
 
     QMediaPlayer * musica = new QMediaPlayer;
 
     bool singlePlayer, bossOn, holeOn;
-    int puntaje=0;
+    int puntaje=0, CanonPausado;
     string partida;
 
 };

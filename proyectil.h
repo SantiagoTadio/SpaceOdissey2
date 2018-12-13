@@ -21,13 +21,15 @@ public:
     proyectil();
 
     int Efecto(){return valor;}
-
+    void setMalo(int efecto);
     void setEfecto(int e){valor = e;}
+    bool Friendly(){return friendly;}
 
 
 private:
 
     int valor;
+    bool friendly;
 
 public slots:
     void move();

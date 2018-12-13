@@ -39,7 +39,7 @@ void UnoDos::on_uno_clicked()
 
 
         ofstream partida(file);
-        partida<<"1;0;0\n1000;1;200;411\n1000;1;300;411";
+        partida<<"1;0;0\n1000;1;200;411\n";
         partida.close();
         w->show();
         w->setPartida(file);

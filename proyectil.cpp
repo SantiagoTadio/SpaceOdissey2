@@ -10,13 +10,25 @@ proyectil::proyectil()
     setRect(0,0,5,15);
     setPen(p); setBrush(b);
     valor= 100;
+    friendly=true;
 
 
+    
+}
 
+void proyectil::setMalo(int efecto)
+{
+    valor = efecto;
+    friendly= false;
+    QPen p(Qt::darkMagenta,2);
+    QBrush b(Qt::cyan);
+    setRect(0,0,8,20);
+    setPen(p); setBrush(b);
 }
 
 void drop::setType(string t)
 {
+    ID=t;
     if(t=="asteroideB"){
         setPixmap(QPixmap(":/images/fireball_big2.png"));
 
@@ -43,9 +55,11 @@ void drop::setType(string t)
 
 
 void proyectil::move(){
-
+    if(friendly)
     setPos(x(),y()-15);
-
+    else
+    setPos(x(),y()+15);  
+    
 }
 
 

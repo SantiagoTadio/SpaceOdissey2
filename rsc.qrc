@@ -13,7 +13,13 @@
         <file>antiG.png</file>
         <file>hole.png</file>
         <file>spacesplash.png</file>
-        <file>aug.png</file>
+        <file>bossPeque.png</file>
+        <file>jefeGus.png</file>
+        <file>pequeDead.png</file>
+        <file>bossPeque2.png</file>
+        <file>bossPeque3.png</file>
+        <file>jefeGus2.png</file>
+        <file>jefeGus3.png</file>
     </qresource>
     <qresource prefix="/music">
         <file>audio.mp3</file>

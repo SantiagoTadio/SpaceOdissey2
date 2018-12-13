@@ -33,7 +33,8 @@ SOURCES += \
     registro.cpp \
     inicio.cpp \
     unodos.cpp \
-    menupausa.cpp
+    menupausa.cpp \
+    canon.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +45,8 @@ HEADERS += \
     registro.h \
     inicio.h \
     unodos.h \
-    menupausa.h
+    menupausa.h \
+    canon.h
 
 FORMS += \
         mainwindow.ui \
