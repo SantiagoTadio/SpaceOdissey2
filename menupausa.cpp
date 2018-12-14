@@ -13,6 +13,12 @@ MenuPausa::~MenuPausa()
     delete ui;
 }
 
+void MenuPausa::esconder()
+{
+    ui->guardar->setVisible(false);
+    ui->reanudar->setVisible(false);
+}
+
 void MenuPausa::on_guardar_clicked()
 {
     main->guardarDatos();

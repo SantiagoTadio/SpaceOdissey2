@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets \
-            multimedia
+QT       += core gui widgets serialport multimedia
+
 
 TARGET = SpaceOdissey3
 TEMPLATE = app

@@ -18,6 +18,8 @@ public:
     explicit MenuPausa(QWidget *parent = nullptr);
     ~MenuPausa();
     void setmain(MainWindow *m){main=m;}
+    void esconder();
+
 
 private slots:
     void on_guardar_clicked();

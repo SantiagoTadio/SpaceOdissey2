@@ -167,6 +167,7 @@ void MainWindow::pausa()
     control->encendido(false);
     MenuPausa *men;
     men=new MenuPausa();
+
     men->setmain(this);
     men->show();
 
@@ -351,6 +352,7 @@ void MainWindow::animar(){
     if(!singlePlayer) ui->hp2->display(QString::number(player2->Vida()));
     ui->puntos->display(QString::number(puntaje));
     if(ui->bossHp->isVisible())ui->bossHp->setText(QString::fromStdString(to_string(jefe->Vida())));
+
 
     if(!bossOn){
         if(puntaje>=1000&&puntaje<1050){
@@ -667,4 +669,9 @@ void MainWindow::setCanones()
         }
     }
 
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    control->conectar();
 }
