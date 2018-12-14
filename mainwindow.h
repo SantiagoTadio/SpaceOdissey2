@@ -66,6 +66,11 @@ private:
     QList<drop*> pows;
     QList<canon*> canones;
 
+    QList<drop*> BasuraDrops;
+    QList<drop*> BasuraPows;
+    QList<proyectil*> BasuraBalas;
+    QList<proyectil*> BasuraEnemigas;
+
     jugador * player1 = new jugador(&balas);
     jugador * player2 = new jugador(&balas);
     personaje * jefe = new personaje;

@@ -7,7 +7,9 @@ registro::registro(QWidget *parent) :
     ui(new Ui::registro)
 {
     ui->setupUi(this);
-
+    ui->lineEdit_3->setEchoMode(QLineEdit::Password);
+    ui->lineEdit_4->setEchoMode(QLineEdit::Password);
+    ui->lineEdit_5->setEchoMode(QLineEdit::Password);
     llenarList();
 }
 

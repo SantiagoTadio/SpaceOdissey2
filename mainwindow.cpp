@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
    connect(spawning,SIGNAL(timeout()),this,SLOT(spawn()));
    spawning->start(1500);
    connect(powers,SIGNAL(timeout()),this,SLOT(crearPoder()));
-   powers->start(10000);
+   powers->start(5000);
    connect(sorteo,SIGNAL(timeout()),this,SLOT(sortear()));
    connect(disparar,SIGNAL(timeout()),this,SLOT(shoot()));
 
@@ -95,7 +95,7 @@ void MainWindow::BossActive(bool t)
         ui->bossHp->setVisible(false);
         bossOn=false;
         spawning->start(1000-int(puntaje/10));
-        powers->start(10000);
+        powers->start(5000);
         sorteo->stop();
         disparar->stop();
         scene->removeItem(jefe);
@@ -181,6 +181,7 @@ void MainWindow::reanudar()
         powers->start(5000);
     }
     else{
+        animacion->start(50);
         disparar->start(1000);
         sorteo->start(5000);
     }
@@ -353,6 +354,49 @@ void MainWindow::animar(){
     ui->puntos->display(QString::number(puntaje));
     if(ui->bossHp->isVisible())ui->bossHp->setText(QString::fromStdString(to_string(jefe->Vida())));
 
+    if(singlePlayer && player1->Vida()<=0){
+        animacion->stop();
+        spawning->stop();
+        powers->stop();
+        musica->stop();
+        disparar->stop();
+        sorteo->stop();
+        control->encendido(false);
+        MenuPausa *men;
+        men=new MenuPausa();
+        men->esconder();
+        men->setmain(this);
+        men->show();
+        player1->setPixmap(QPixmap(":/images/damage.png"));
+    }
+
+    else if(!singlePlayer){
+        if(player1->Vida()<=0){
+            control->setvivo1(false);
+            player1->setPixmap(QPixmap(":/images/damage.png"));
+            ui->hp->setVisible(false);
+
+        }
+        if(player2->Vida()<=0){
+            control->setvivo2(false);
+            player2->setPixmap(QPixmap(":/images/damage.png"));
+            ui->hp2->setVisible(false);
+        }
+        if(player1->Vida()<=0 && player2->Vida()<=0){
+            animacion->stop();
+            spawning->stop();
+            powers->stop();
+            musica->stop();
+            disparar->stop();
+            sorteo->stop();
+            control->encendido(false);
+            MenuPausa *men;
+            men=new MenuPausa();
+            men->esconder();
+            men->setmain(this);
+            men->show();
+        }
+    }
 
     if(!bossOn){
         if(puntaje>=1000&&puntaje<1050){
@@ -383,6 +427,11 @@ void MainWindow::animar(){
     if(bossOn&&jefe->Vida()<=0){
         BossActive(false);
         puntaje+=100;
+        drop* cosa= new drop(false);
+        cosa->setType("cura");
+        cosa->setPos(jefe->x()+130,jefe->y());
+        scene->addItem(cosa);
+        pows.push_back(cosa);
     }
 
     for(int i=canones.size()-1;i>=0;i--){
@@ -393,9 +442,8 @@ void MainWindow::animar(){
                     canones.at(i)->activo=false;
                 }
                 if(canones.at(i)->activo) canones.at(i)->vida-=balas.at(h)->Efecto();
-                scene->removeItem(balas.at(h));
-                balas.at(h)->~proyectil();
-                balas.removeAt(h);
+                BasuraBalas.append(balas.at(h));
+
             }
         }
     }
@@ -409,26 +457,22 @@ void MainWindow::animar(){
             if(balasEnemigas.at(i)->collidesWithItem(player2))
                 player2->setVida(player2->Vida()-balasEnemigas.at(i)->Efecto());
 
-            scene->removeItem(balasEnemigas.at(i));
-            balasEnemigas.at(i)->~proyectil();
-            balasEnemigas.removeAt(i);
+            BasuraEnemigas.append(balasEnemigas.at(i));
+
 
         }
         else if(balasEnemigas.at(i)->y()>500){
-            scene->removeItem(balasEnemigas.at(i));
-            balasEnemigas.at(i)->~proyectil();
-            balasEnemigas.removeAt(i);
+            BasuraEnemigas.append(balasEnemigas.at(i));
+
         }
         else{
             for(int h=balas.size()-1;h>=0;h--){
                 if(balasEnemigas.at(i)->collidesWithItem(balas.at(h))){
-                    scene->removeItem(balasEnemigas.at(i));
-                    balasEnemigas.at(i)->~proyectil();
-                    balasEnemigas.removeAt(i);
+                    BasuraEnemigas.append(balasEnemigas.at(i));
 
-                    scene->removeItem(balas.at(h));
-                    balas.at(h)->~proyectil();
-                    balas.removeAt(h);
+
+                    BasuraBalas.append(balas.at(h));
+
                     break;
                 }
             }
@@ -440,24 +484,21 @@ void MainWindow::animar(){
         balas.at(w)->move();
         if(balas.at(w)->collidesWithItem(jefe)){
             jefe->setVida(jefe->Vida()-balas.at(w)->Efecto());
-            scene->removeItem(balas.at(w));
-            balas.at(w)->~proyectil();
-            balas.removeAt(w);
+            BasuraBalas.append(balas.at(w));
+
         }
         else if (balas.at(w)->y()<=0) {
-            scene->removeItem(balas.at(w));
-            balas.at(w)->~proyectil();
-            balas.removeAt(w);
+            BasuraBalas.append(balas.at(w));
+
 
         }
         else{
             for(int i=drops.size()-1;i>=0;i--){
                 if(balas.at(w)->collidesWithItem(drops.at(i))&&drops.at(i)->Efecto()>0){
                     drops.at(i)->setEfecto(drops.at(i)->Efecto()-balas.at(w)->Efecto());
-                    scene->removeItem(balas.at(w));
-                    balas.at(w)->~proyectil();
-                    balas.removeAt(w);
-                    puntaje+=5;
+                    BasuraBalas.append(balas.at(w));
+
+                    puntaje+=10;
                     break;
                 }
             }
@@ -489,34 +530,37 @@ void MainWindow::animar(){
             }
 
             if(drops.at(i)->collidesWithItem(player1)||drops.at(i)->collidesWithItem(player2)){
-                if(drops.at(i)->collidesWithItem(player1))
-                player1->setVida(player1->Vida()-drops.at(i)->Efecto());
-                if(drops.at(i)->collidesWithItem(player2))
-                    player2->setVida(player2->Vida()-drops.at(i)->Efecto());
+                if(drops.at(i)->collidesWithItem(player1)&&player1->Vida()>0){
+                    player1->setVida(player1->Vida()-drops.at(i)->Efecto());
+                    BasuraDrops.append(drops.at(i));
+                }
 
-                scene->removeItem(drops.at(i));
-                drops.at(i)->~drop();
-                drops.removeAt(i);
+                if(drops.at(i)->collidesWithItem(player2)&&player2->Vida()>0){
+                    player2->setVida(player2->Vida()-drops.at(i)->Efecto());
+                    BasuraDrops.append(drops.at(i));
+                }
+
+
 
             }
             else if(drops.at(i)->y()>500){
-                scene->removeItem(drops.at(i));
-                drops.at(i)->~drop();
-                drops.removeAt(i);
+                BasuraDrops.append(drops.at(i));
+
                 player1->setVida(player1->Vida()-drops.at(i)->Efecto());
                 if(!singlePlayer) player2->setVida(player2->Vida()-drops.at(i)->Efecto());
             }
+            else if(drops.at(i)->x()<50||drops.at(i)->x()>820){
+                BasuraDrops.append(drops.at(i));
+            }
             else if(drops.at(i)->collidesWithItem(hole)){
-                scene->removeItem(drops.at(i));
-                drops.at(i)->~drop();
-                drops.removeAt(i);
+                BasuraDrops.append(drops.at(i));
+
             }
 
         }
         else{
-            scene->removeItem(drops.at(i));
-            drops.at(i)->~drop();
-            drops.removeAt(i);
+            BasuraDrops.append(drops.at(i));
+
         }
 
     }
@@ -525,12 +569,12 @@ void MainWindow::animar(){
         if(pows.at(i)->collidesWithItem(player2)||pows.at(i)->collidesWithItem(player1)){
 
             if(pows.at(i)->Type()=="cura"){
-                if(pows.at(i)->collidesWithItem(player1)) player1->setVida(player1->VidaMax());
-                if(pows.at(i)->collidesWithItem(player2)) player2->setVida(player2->VidaMax());
+                if(pows.at(i)->collidesWithItem(player1)) player1->setVida(player1->Vida()*2);
+                if(pows.at(i)->collidesWithItem(player2)) player2->setVida(player2->Vida()*2);
             }
             else if(pows.at(i)->Type()=="veneno"){
-                if(pows.at(i)->collidesWithItem(player1)) player1->setVida(1);
-                if(pows.at(i)->collidesWithItem(player2)) player2->setVida(1);
+                if(pows.at(i)->collidesWithItem(player1)) player1->setVida(player1->Vida()/2);
+                if(pows.at(i)->collidesWithItem(player2)) player2->setVida(player2->Vida()/2);
             }
             else if(pows.at(i)->Type()=="mejora"){
                 if(pows.at(i)->collidesWithItem(player1)) player1->setPoder(player1->Power()+1);
@@ -563,18 +607,63 @@ void MainWindow::animar(){
 
 
 
-            scene->removeItem(pows.at(i));
-            pows.at(i)->~drop();
-            pows.removeAt(i);
+            BasuraPows.append(pows.at(i));
+
 
         }
         else if(pows.at(i)->y()>500){
-            scene->removeItem(pows.at(i));
-            pows.at(i)->~drop();
-            pows.removeAt(i);
+            BasuraPows.append(pows.at(i));
+
 
         }
 
+    }
+    for(int i=BasuraBalas.size()-1;i>=0;i--){
+        for(int j=balas.size()-1;j>=0;j--){
+            if(BasuraBalas.at(i)==balas.at(j)){
+                scene->removeItem(BasuraBalas.at(i));
+                BasuraBalas.at(i)->~proyectil();
+                BasuraBalas.removeAt(i);
+                balas.removeAt(j);
+                break;
+            }
+        }
+    }
+
+    for(int i=BasuraDrops.size()-1;i>=0;i--){
+        for(int j=drops.size()-1;j>=0;j--){
+            if(BasuraDrops.at(i)==drops.at(j)){
+                scene->removeItem(BasuraDrops.at(i));
+                BasuraDrops.at(i)->~drop();
+                BasuraDrops.removeAt(i);
+                drops.removeAt(j);
+                break;
+            }
+        }
+    }
+
+    for(int i=BasuraEnemigas.size()-1;i>=0;i--){
+        for(int j=balasEnemigas.size()-1;j>=0;j--){
+            if(BasuraEnemigas.at(i)==balasEnemigas.at(j)){
+                scene->removeItem(BasuraEnemigas.at(i));
+                BasuraEnemigas.at(i)->~proyectil();
+                BasuraEnemigas.removeAt(i);
+                balasEnemigas.removeAt(j);
+                break;
+            }
+        }
+    }
+
+    for(int i=BasuraPows.size()-1;i>=0;i--){
+        for(int j=pows.size()-1;j>=0;j--){
+            if(BasuraPows.at(i)==pows.at(j)){
+                scene->removeItem(BasuraPows.at(i));
+                BasuraPows.at(i)->~drop();
+                BasuraPows.removeAt(i);
+                pows.removeAt(j);
+                break;
+            }
+        }
     }
 
 }
@@ -612,7 +701,11 @@ void MainWindow::sortear(){
     if(canones.at(CanonPausado)->vida>0)canones.at(CanonPausado)->activo=true;
     for(int i=canones.size()-1;i>=0;i--){
         if(canones.at(i)->vida>0)muertos=false;
-        else canones.at(i)->Muerto(true);
+        else{
+
+            canones.at(i)->Muerto(true);
+
+        }
         if(canones.at(i)->vida>vmax&&i!=w) {
             CanonPausado=i;
             vmax=canones.at(i)->vida;

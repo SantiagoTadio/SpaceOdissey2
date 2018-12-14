@@ -8,6 +8,7 @@ inicio::inicio(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
 }
 
 inicio::~inicio()

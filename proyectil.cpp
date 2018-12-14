@@ -87,11 +87,8 @@ drop::drop(bool asteroide)
         }
     }
     else{
-        if(tipo==0){
-            setPixmap(QPixmap(":/images/powerUP.png"));
-            ID="mejora";
-        }
-        else if(tipo==1){
+
+        if(tipo==1){
             setPixmap(QPixmap(":/images/Sin título-1.png"));
             ID="escudo";
         }

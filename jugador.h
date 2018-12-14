@@ -55,7 +55,7 @@ public:
     int VidaMax(){return vidaMax;}
     void setVidaMax(int v){vidaMax=v;}
     int Vida(){return vida;}
-    void setVida(int v){vida=v;}
+    void setVida(int v){vida=v;  if(v>vidaMax)vida=vidaMax;}
 
 private:
     int power,vidaMax, vida;
