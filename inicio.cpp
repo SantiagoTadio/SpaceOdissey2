@@ -7,13 +7,17 @@ inicio::inicio(QWidget *parent) :
     ui(new Ui::inicio)
 {
     ui->setupUi(this);
-
-
+    ui->graphicsView->setScene(escena);
+    escena->setSceneRect(0,0,1000,1000);
+    escena->setBackgroundBrush(QBrush(QImage(":/images/BG.png")));
+    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 inicio::~inicio()
 {
     delete ui;
+    delete escena;
 }
 
 void inicio::setchek(int _chek){

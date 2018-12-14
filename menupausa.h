@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include "registro.h"
 #include "inicio.h"
+#include <QGraphicsScene>
 
 namespace Ui {
 class MenuPausa;
@@ -17,7 +18,7 @@ class MenuPausa : public QDialog
 public:
     explicit MenuPausa(QWidget *parent = nullptr);
     ~MenuPausa();
-    void setmain(MainWindow *m){main=m;}
+    void setmain(MainWindow *m){mai=m;}
     void esconder();
 
 
@@ -34,8 +35,8 @@ private slots:
 
 private:
     Ui::MenuPausa *ui;
-
-    MainWindow *main;
+    QGraphicsScene* escena= new QGraphicsScene;
+    MainWindow *mai;
 
 };
 

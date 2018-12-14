@@ -11,11 +11,18 @@ registro::registro(QWidget *parent) :
     ui->lineEdit_4->setEchoMode(QLineEdit::Password);
     ui->lineEdit_5->setEchoMode(QLineEdit::Password);
     llenarList();
+
+    ui->graphicsView->setScene(escena);
+    escena->setSceneRect(0,0,1000,1000);
+    escena->setBackgroundBrush(QBrush(QImage(":/images/BG.png")));
+    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 registro::~registro()
 {
     delete ui;
+    delete escena;
 }
 
 bool registro::veriUs(string _alias, string _pass)

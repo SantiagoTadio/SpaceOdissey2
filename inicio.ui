@@ -26,11 +26,54 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>90</y>
-     <width>351</width>
-     <height>141</height>
+     <x>310</x>
+     <y>50</y>
+     <width>431</width>
+     <height>201</height>
     </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>190</red>
+         <green>190</green>
+         <blue>190</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>190</red>
+         <green>190</green>
+         <blue>190</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>120</red>
+         <green>120</green>
+         <blue>120</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>36</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>TextLabel</string>
@@ -41,9 +84,15 @@
     <rect>
      <x>50</x>
      <y>50</y>
-     <width>91</width>
+     <width>181</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Partida1</string>
@@ -54,9 +103,15 @@
     <rect>
      <x>50</x>
      <y>120</y>
-     <width>91</width>
+     <width>181</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Partida 2</string>
@@ -67,9 +122,15 @@
     <rect>
      <x>50</x>
      <y>190</y>
-     <width>91</width>
+     <width>181</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>partida 3</string>
@@ -80,9 +141,15 @@
     <rect>
      <x>50</x>
      <y>260</y>
-     <width>91</width>
+     <width>181</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>partida 4</string>
@@ -93,9 +160,15 @@
     <rect>
      <x>50</x>
      <y>330</y>
-     <width>91</width>
+     <width>181</width>
      <height>51</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>20</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Partida 5</string>
@@ -104,11 +177,17 @@
   <widget class="QPushButton" name="cargar">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>350</y>
-     <width>75</width>
-     <height>23</height>
+     <x>450</x>
+     <y>280</y>
+     <width>131</width>
+     <height>91</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>22</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Cargar</string>
@@ -117,11 +196,17 @@
   <widget class="QPushButton" name="nuevo">
    <property name="geometry">
     <rect>
-     <x>500</x>
-     <y>350</y>
-     <width>75</width>
-     <height>23</height>
+     <x>620</x>
+     <y>282</y>
+     <width>131</width>
+     <height>91</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>22</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Nuevo</string>

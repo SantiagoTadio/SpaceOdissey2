@@ -27,10 +27,9 @@ public:
     
     string nombre;
 
-    
-public slots:
 
-    //void curar();
+
+
 
 
 private:

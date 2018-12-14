@@ -60,9 +60,13 @@ MainWindow::~MainWindow()
     delete jefe;
     delete animacion;
     delete spawning;
+    delete powers;
     delete musica;
-
+    delete sorteo;
+    delete disparar;
     delete recto;
+    delete gelato;
+    delete hole;
 
 }
 

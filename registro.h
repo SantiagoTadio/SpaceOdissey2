@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <QGraphicsScene>
 
 using namespace std;
 
@@ -37,6 +38,7 @@ private slots:
 
 private:
     Ui::registro *ui;
+    QGraphicsScene* escena= new QGraphicsScene;
     QList<usuario> listUs;
 
 };

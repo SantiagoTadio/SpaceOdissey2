@@ -26,11 +26,17 @@
   <widget class="QPushButton" name="guardar">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>60</x>
      <y>30</y>
-     <width>75</width>
-     <height>23</height>
+     <width>131</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Guardar</string>
@@ -39,11 +45,17 @@
   <widget class="QPushButton" name="partidas">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>60</x>
      <y>80</y>
-     <width>75</width>
-     <height>23</height>
+     <width>131</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Partidas</string>
@@ -52,11 +64,17 @@
   <widget class="QPushButton" name="salir">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>240</y>
-     <width>81</width>
-     <height>31</height>
+     <x>60</x>
+     <y>230</y>
+     <width>131</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>10</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Salir del juego</string>
@@ -65,11 +83,17 @@
   <widget class="QPushButton" name="inicio">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>60</x>
      <y>130</y>
-     <width>75</width>
-     <height>23</height>
+     <width>131</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Inicio</string>
@@ -78,11 +102,17 @@
   <widget class="QPushButton" name="reanudar">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>60</x>
      <y>180</y>
-     <width>75</width>
-     <height>23</height>
+     <width>131</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Reanudar</string>

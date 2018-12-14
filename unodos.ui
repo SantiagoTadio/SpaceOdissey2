@@ -26,11 +26,17 @@
   <widget class="QPushButton" name="uno">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>110</y>
-     <width>81</width>
-     <height>31</height>
+     <x>20</x>
+     <y>60</y>
+     <width>251</width>
+     <height>91</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>28</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Un Jugador</string>
@@ -39,11 +45,17 @@
   <widget class="QPushButton" name="dos">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>180</y>
-     <width>81</width>
-     <height>31</height>
+     <x>20</x>
+     <y>200</y>
+     <width>251</width>
+     <height>91</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Md BT</family>
+     <pointsize>24</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Multijugador</string>

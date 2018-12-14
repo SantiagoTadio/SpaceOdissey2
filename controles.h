@@ -19,6 +19,7 @@ class controles: public QObject,public QGraphicsRectItem
     Q_OBJECT
 public:
     controles();
+    ~controles();
     void keyPressEvent(QKeyEvent *event){keys[event->key()]=true; }
     void keyReleaseEvent(QKeyEvent *ev) {keys[ev->key()]=false; }
     jugador* pj1, *pj2;

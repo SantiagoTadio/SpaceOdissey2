@@ -111,6 +111,15 @@ controles::controles(){
     connect(ardu,SIGNAL(timeout()),this,SLOT(controlesArdu()));
 }
 
+controles::~controles()
+{
+    delete timer;
+    delete cont;
+    delete ardu;
+    delete pj1;
+    delete pj2;
+}
+
 void controles::conectar()
 {
     cont->setPortName("COM8");

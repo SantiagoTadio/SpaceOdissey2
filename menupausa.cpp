@@ -6,11 +6,18 @@ MenuPausa::MenuPausa(QWidget *parent) :
     ui(new Ui::MenuPausa)
 {
     ui->setupUi(this);
+    ui->graphicsView->setScene(escena);
+    escena->setSceneRect(0,0,1000,1000);
+    escena->setBackgroundBrush(QBrush(QImage(":/images/BG.png")));
+    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 MenuPausa::~MenuPausa()
 {
     delete ui;
+    delete mai;
+    delete escena;
 }
 
 void MenuPausa::esconder()
@@ -21,16 +28,16 @@ void MenuPausa::esconder()
 
 void MenuPausa::on_guardar_clicked()
 {
-    main->guardarDatos();
+    mai->guardarDatos();
 }
 
 void MenuPausa::on_partidas_clicked()
 {
-    main->close();
+    mai->close();
     inicio *in;
     in=new inicio();
     in->show();
-    string p = main->Partida();
+    string p = mai->Partida();
     char usu[20]="";
     for(int i=0;p[i]!='_';i++){
         usu[i]=p[i];
@@ -44,7 +51,7 @@ void MenuPausa::on_partidas_clicked()
 
 void MenuPausa::on_inicio_clicked()
 {
-    main->close();
+    mai->close();
     registro *re;
     re=new registro();
     re->show();
@@ -53,13 +60,13 @@ void MenuPausa::on_inicio_clicked()
 
 void MenuPausa::on_salir_clicked()
 {
-    main->close();
+    mai->close();
     this->close();
 
 }
 
 void MenuPausa::on_reanudar_clicked()
 {
-    main->reanudar();
+    mai->reanudar();
     this->close();
 }

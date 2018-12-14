@@ -76,7 +76,7 @@ void jugador::shoot()
 jugador::~jugador()
 {
     delete shot;
-
+    delete lista;
 
 
 }

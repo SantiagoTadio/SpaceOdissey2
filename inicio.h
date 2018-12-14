@@ -6,6 +6,7 @@
 #include <fstream>
 #include "mainwindow.h"
 #include "unodos.h"
+#include <QGraphicsScene>
 
 using namespace std;
 namespace Ui {
@@ -41,6 +42,7 @@ private slots:
 
 private:
     Ui::inicio *ui;
+    QGraphicsScene* escena= new QGraphicsScene;
     string alias_Usu_jug;
     int chek;
 };

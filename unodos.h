@@ -6,6 +6,7 @@
 #include <QDialog>
 #include <fstream>
 #include "mainwindow.h"
+#include <QGraphicsScene>
 
 using namespace std;
 
@@ -33,6 +34,7 @@ private slots:
 private:
     Ui::UnoDos *ui;
     string alias_Usu_jug;
+    QGraphicsScene* escena= new QGraphicsScene;
     int chek;
 };
 
