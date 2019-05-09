@@ -7,11 +7,12 @@ using namespace std;
 
 
 class usuario
+// objeto con informacion de usuario
 {
 public:
-    usuario(string _alias,string _password);
-    string get_alias();
-    string get_pass();
+    usuario(string _alias,string _password); // construye el usuario con su alias y contraseña
+    string get_alias(); //retorna el alias
+    string get_pass(); //retorna la contraseña
 private:
     string alias;
     string password;

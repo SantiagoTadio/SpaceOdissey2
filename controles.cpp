@@ -4,15 +4,15 @@
 
 void controles::timeOutEvent()
 {
-    if(on){
-        if(vivo1){
-            if(keys[Qt::Key_Left]&& pj1->x()>10){
+    if(on){ //si el control se encuentra activado
+        if(vivo1){//si el jugador 1 está vivo
+            if(keys[Qt::Key_Left]&& pj1->x()>10){ // si la flecha izquierda está presionada, mueve la nave horizontalmente en este sentido
                 pj1->setPos(pj1->x()-10,pj1->y());
             }
-            if(keys[Qt::Key_Right]&& pj1->x()<730){
+            if(keys[Qt::Key_Right]&& pj1->x()<730){// si la flecha derecha está presionada, mueve la nave horizontalmente en este sentido
                 pj1->setPos(pj1->x()+10,pj1->y());
             }
-            if(keys[Qt::Key_Space]){
+            if(keys[Qt::Key_Space]){ // si la tecla "espacio" está presionada, dispara un proyectil
                 if(shoot1){
                     pj1->shoot();
                     shoot1=false;
@@ -20,15 +20,15 @@ void controles::timeOutEvent()
                 }
             }
         }
-        if(vivo2){
+        if(vivo2){//si el jugador 2 está vivo
             if(multiplayer){
-                if(keys[Qt::Key_A]&& pj2->x()>10){
+                if(keys[Qt::Key_A]&& pj2->x()>10){ // si la flecha "A" está presionada, mueve la nave horizontalmente en este sentido
                     pj2->setPos(pj2->x()-10,pj2->y());
                 }
-                if(keys[Qt::Key_D]&& pj2->x()<730){
+                if(keys[Qt::Key_D]&& pj2->x()<730){ // si la flecha "D" está presionada, mueve la nave horizontalmente en este sentido
                     pj2->setPos(pj2->x()+10,pj2->y());
                 }
-                if(keys[Qt::Key_Control]){
+                if(keys[Qt::Key_Control]){ // si la tecla "control" está presionada, la nave dispara
                     if(shoot2){
                          pj2->shoot();
                          shoot2=false;
@@ -46,11 +46,11 @@ void controles::timeOutEvent()
 
 void controles::controlesArdu()
 {
-    if(on){
+    if(on){//si el control se encuentra activado
         char data;
         int l = 0;
         bool flag=true;
-           if(cont->waitForReadyRead(100)){
+           if(cont->waitForReadyRead(100)){// leer las señales que vienen del arduino cada cierto tiempo
 
                 //Data was returned
                 l = cont->read(&data,1);
@@ -104,14 +104,14 @@ void controles::controlesArdu()
     }
 }
 
-controles::controles(){
+controles::controles(){ //constructor
     timer->start(50);
-    connect(timer,SIGNAL(timeout()),this,SLOT(timeOutEvent()));
+    connect(timer,SIGNAL(timeout()),this,SLOT(timeOutEv ent()));
     on=true;  multiplayer=false;  shoot1=true;   shoot2=true;  vivo1=true;    vivo2=true;
     connect(ardu,SIGNAL(timeout()),this,SLOT(controlesArdu()));
 }
 
-controles::~controles()
+controles::~controles() // destructor
 {
     delete timer;
     delete cont;
@@ -124,8 +124,8 @@ void controles::conectar()
 {
     cont->setPortName("COM8");
     //timer_control->start(100);
-    if(cont->open(QIODevice::ReadWrite)){
-        //Ahora el puerto seria está abierto
+    if(cont->open(QIODevice::ReadWrite)){ //Ahora el puerto seria está abierto
+
         if(!cont->setBaudRate(QSerialPort::Baud9600)) //Configurar la tasa de baudios
             qDebug()<<cont->errorString();
 

@@ -14,16 +14,17 @@
 
 using namespace std;
 
-class proyectil: public QObject, public QGraphicsRectItem
+class proyectil: public QObject, public QGraphicsRectItem // balas aliadas y enemigas
+
 {
     Q_OBJECT
 public:
     proyectil();
 
-    int Efecto(){return valor;}
-    void setMalo(int efecto);
-    void setEfecto(int e){valor = e;}
-    bool Friendly(){return friendly;}
+    int Efecto(){return valor;} // valor del daño que causa al contacto
+    void setMalo(int efecto); // convierte la bala en enemiga
+    void setEfecto(int e){valor = e;} // asigna un valor al daño
+    bool Friendly(){return friendly;} // averigua si una bala es aliada o enemiga
 
 
 private:
@@ -32,7 +33,7 @@ private:
     bool friendly;
 
 public slots:
-    void move();
+    void move(); // funcion que asigna una nueva posición al proyectil
 
 
 
@@ -40,20 +41,20 @@ public slots:
 
 
 
-class drop: public QObject, public QGraphicsPixmapItem
+class drop: public QObject, public QGraphicsPixmapItem // asteroides y poderes
 
 {
     Q_OBJECT
 public:
-    drop(bool asteroide);
-    string Type(){return ID;}
-    int Efecto(){return valor;}
-    void setType(string t);
-    void setEfecto(int e){valor = e;}
+    drop(bool asteroide); // crea un asteroide si asteroide=true. De lo contrario, crea aleatoriamente un poder
+    string Type(){return ID;} // retorna el tipo de proyectil
+    int Efecto(){return valor;} // retorna el valor del daño o efecto que causa el proyectil
+    void setType(string t); // asigna el tipo al proyectil
+    void setEfecto(int e){valor = e;} // asigna el efecto al proyectil
 
-    float VelX(){return velX;}
-    float VelY(){return velY;}
-    void setVel(float vx, float vy){velX= vx;  velY = vy;}
+    float VelX(){return velX;} // velocidad horizontal del proyectil
+    float VelY(){return velY;} // velocidad vertical del proyectil
+    void setVel(float vx, float vy){velX= vx;  velY = vy;} // asigna velocidades horizontal y vertical del proyectil
 
 private:
     string ID;
@@ -61,9 +62,9 @@ private:
     float velX, velY;
 
 public slots:
-    void move(float dt,int posX, int posY, int posX2=10000, int posY2=10000);
-    void move(){setPos(x(),y()+5);}
-    void moveBack(float dt,int posX, int posY, int posX2=10000, int posY2=10000);
+    void move(float dt,int posX, int posY, int posX2=10000, int posY2=10000); // movimiento acelerado de atracci de los asteroides
+    void move(){setPos(x(),y()+5);} // movimiento rectilíneo uniforme de las balas
+    void moveBack(float dt,int posX, int posY, int posX2=10000, int posY2=10000); // movimiento acelerado de repulsión de los asteroides
 
 
 

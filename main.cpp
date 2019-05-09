@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QSplashScreen * splash= new QSplashScreen;
+    QSplashScreen * splash= new QSplashScreen; // imagen que sale al ejecutar el juego
     splash->setPixmap(QPixmap(":/images/spacesplash.png"));
     splash->show();
     registro w;

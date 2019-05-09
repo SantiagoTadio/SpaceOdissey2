@@ -13,9 +13,10 @@ UnoDos::UnoDos(QWidget *parent) :
     ui(new Ui::UnoDos)
 {
     ui->setupUi(this);
-    ui->graphicsView->setScene(escena);
+    ui->graphicsView->setScene(escena); //crea la escena
     escena->setSceneRect(0,0,1000,1000);
-    escena->setBackgroundBrush(QBrush(QImage(":/images/BG.png")));
+    escena->setBackgroundBrush(QBrush(QImage(":/images/BG.png"))); //fondo de la escena
+    //desactiva scrollbars horizontal y vertical
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
@@ -28,46 +29,48 @@ UnoDos::~UnoDos()
 
 void UnoDos::setalias(string alias)
 {
-    alias_Usu_jug=alias;
+    alias_Usu_jug=alias; //asigna el nombre de usuario
 }
 
 void UnoDos::setchek(int _chek){
-    chek=_chek;
+    chek=_chek; //asigna el numero de la opción elegida(chek)
 }
 
 
 
 void UnoDos::on_uno_clicked()
 {
-    string file= alias_Usu_jug+"_"+"Partida"+char(chek+48)+".txt";
-    ifstream archivo(file);
+    //si selecciona un jugador
+    string file= alias_Usu_jug+"_"+"Partida"+char(chek+48)+".txt";//crea el nombre del archivo de texto que almacenará la partida
+    ifstream archivo(file);//abre archivo
     MainWindow *w= new MainWindow;
 
 
         ofstream partida(file);
-        partida<<"1;0;0\n1000;1;200;411\n";
+        partida<<"1;0;0\n1000;1;200;411\n"; //ingresa datos iniciales de partida para un jugador
         partida.close();
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
+        w->show();//abre mainwindow
+        w->setPartida(file); //asigna la partida al mainwindow
+        w->cargarDatos(); //carga los datos del archivo creado
 
     archivo.close();
-    this->close();
+    this->close(); //cierra unodos
 }
 
 void UnoDos::on_dos_clicked()
 {
-    string file= alias_Usu_jug+"_"+"Partida"+char(chek+48)+".txt";
-    ifstream archivo(file);
+    //si selecciona dos jugadores
+    string file= alias_Usu_jug+"_"+"Partida"+char(chek+48)+".txt";//crea el nombre del archivo de texto que almacenará la partida
+    ifstream archivo(file);//abre archivo
     MainWindow *w= new MainWindow;
 
 
-        ofstream partida(file);
-        partida<<"2;0;0\n1000;1;200;411\n1000;1;300;411";
+        ofstream partida(file);//abre archivo
+        partida<<"2;0;0\n1000;1;200;411\n1000;1;300;411"; //ingresa datos iniciales de partida para dos jugadores
         partida.close();
-        w->show();
-        w->setPartida(file);
-        w->cargarDatos();
+        w->show();//abre mainwindow
+        w->setPartida(file); //asigna la partida al mainwindow
+        w->cargarDatos(); //carga los datos del archivo creado
     archivo.close();
-    this->close();
+    this->close(); //cierra unodos
 }

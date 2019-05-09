@@ -15,21 +15,22 @@ class UnoDos;
 }
 
 class UnoDos : public QDialog
+// Dialogo para seleccionar un juagador o multijugador
 {
     Q_OBJECT
 
 public:
     explicit UnoDos(QWidget *parent = nullptr);
     ~UnoDos();
-    void setalias(string alias);
+    void setalias(string alias); // Asigna el alias del usuario
 
-    void setchek(int _chek);
+    void setchek(int _chek); // Asigna el numero de partida
 
 
 private slots:
-    void on_uno_clicked();
+    void on_uno_clicked(); // crea informacion de partida para un jugador
 
-    void on_dos_clicked();
+    void on_dos_clicked(); // crea informacion de partida para dos jugadores
 
 private:
     Ui::UnoDos *ui;

@@ -7,16 +7,19 @@ registro::registro(QWidget *parent) :
     ui(new Ui::registro)
 {
     ui->setupUi(this);
-    ui->lineEdit_3->setEchoMode(QLineEdit::Password);
+    ui->lineEdit_3->setEchoMode(QLineEdit::Password);//crea cuadros de contraseña
     ui->lineEdit_4->setEchoMode(QLineEdit::Password);
     ui->lineEdit_5->setEchoMode(QLineEdit::Password);
-    llenarList();
+    llenarList(); //llena la lista de usuarios
 
     ui->graphicsView->setScene(escena);
     escena->setSceneRect(0,0,1000,1000);
-    escena->setBackgroundBrush(QBrush(QImage(":/images/BG.png")));
+    escena->setBackgroundBrush(QBrush(QImage(":/images/BG.png")));//fondo
+    //desactiva scrollbars horizonal y vertical
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->msj_ins->setVisible(false);
+    ui->msj_reg->setVisible(false);
 }
 
 registro::~registro()
@@ -25,12 +28,13 @@ registro::~registro()
     delete escena;
 }
 
+
 bool registro::veriUs(string _alias, string _pass)
 {
     int n=listUs.size();
-    for(int i=0;i<n;i++){
-        //cout<<listUs[i].get_alias()<<","<<listUs[i].get_pass()<<","<<endl;
-        if(listUs[i].get_alias() == _alias && listUs[i].get_pass()==_pass){
+    for(int i=0;i<n;i++){//recorre la lista de usuarios
+
+        if(listUs[i].get_alias() == _alias && listUs[i].get_pass()==_pass){ //verifica que coincidan el nombre de usuario y la contraseña
             return true;
         }
 
@@ -42,21 +46,21 @@ void registro::llenarList()
 {
 
     string line;
-    char nombreRouter[100]={};
-    char costo[100]={};
+    char alias[100]={};
+    char clave[100]={};
     int i=0,j=0;
 
 
-    ifstream myfile ("datosUs.txt");
+    ifstream myfile ("datosUs.txt");//abre el archivo de texto que contiene los alias y sus respectivas contraseñas
     if (myfile.is_open()){
 
-        while (myfile.good()){
+        while (myfile.good()){//lee el archivo
 
-            getline (myfile,line);
+            getline (myfile,line);//lee una linea
 
 
             while(line[i]!=','){
-                nombreRouter[j]=line[i];
+                alias[j]=line[i]; //llena el nombre de usuario
                 j++;
                 i++;
             }
@@ -64,24 +68,25 @@ void registro::llenarList()
             i++;
             j=0;
             while(line[i]!=';'){
-                costo[j]=line[i];
+                clave[j]=line[i];//llena la contraseña
                 i++;
                 j++;
             }
 
-            usuario us(nombreRouter,costo);
-            listUs.push_back(us);
+            usuario us(alias,clave); //crea un objeto tipo usuario
+            listUs.push_back(us);//añade el usuario a una lista de usuarios
 
 
             j=0;
             i=0;
-            for(int w=0; nombreRouter[w]!='\0';w++)nombreRouter[w]='\0';
+            //vacia los char[] de usuario y clave
+            for(int w=0; alias[w]!='\0';w++)alias[w]='\0';
 
-            for(int w=0; costo[w]!='\0';w++)costo[w]='\0';
+            for(int w=0; clave[w]!='\0';w++)clave[w]='\0';
 
 
         }
-        myfile.close();
+        myfile.close();//cierra el archivo
     }
     else{
         cout<<"no se pudo abrir el archivo";
@@ -92,12 +97,12 @@ void registro::llenarList()
 
 void registro::guardarArch()
 {
-    ofstream myfileA("datosUs.txt");
+    ofstream myfileA("datosUs.txt"); //abre archivo de usuarios
     for(int i=0;i<listUs.size();i++ ){
-        myfileA<<listUs[i].get_alias()<<","<<listUs[i].get_pass()<<";";
+        myfileA<<listUs[i].get_alias()<<","<<listUs[i].get_pass()<<";"; //en cada linea escribe el nombre usuario seguido por ",", la contraseña y separados un usuario de otro por ";"
         if(i!=listUs.size()-1) myfileA<<endl;
     }
-    myfileA.close();
+    myfileA.close();//cierra archivo
 }
 
 
@@ -105,39 +110,46 @@ void registro::guardarArch()
 void registro::on_pushButton_clicked()
 {
     QString alias,pass,password;
+    //obtiene los valores ingresados en los line Edit
     alias=ui->lineEdit->text();
     pass=ui->lineEdit_4->text();
     password=ui->lineEdit_5->text();
 
-    if(!alias.isDetached() && !pass.isEmpty() && !password.isEmpty()){
+    if(!alias.isDetached() && !pass.isEmpty() && !password.isEmpty()){ //si todas las casillas tienen información
         bool cond=false;
         for(int i=0;i<listUs.size();i++){
-            if(listUs[i].get_alias()==alias.toStdString()){
+            if(listUs[i].get_alias()==alias.toStdString()){ //verifica si el usuario ingresado existe
                 cond=true;
                 break;
             }
         }
         if(cond==true){
             cout<<"usuario ya creado"<<endl;
+            ui->msj_reg->setVisible(true);
+            ui->msj_reg->setText(QString::fromStdString("El nombre de usuario no está disponible"));
         }
         else{
 
-                if(pass==password){
-                    usuario us(alias.toStdString(),pass.toStdString());
+                if(pass==password){ //si la contraseña y la repeticion de contraseña coinciden
+                    usuario us(alias.toStdString(),pass.toStdString()); //crea un nuevo usuario con los datos ingresados
                     listUs.push_back(us);
                     guardarArch();
 
 
                 }
-                else{
-                    cout<<"Las claves no considen"<<endl;
+                else{ //de lo contrario
+                    cout<<"Las claves no conciden"<<endl;
+                    ui->msj_reg->setVisible(true);
+                    ui->msj_reg->setText(QString::fromStdString("Las claves no coinciden"));
                 }
         }
 
 
     }
-    else{
+    else{//si falta algo por llenar
         cout<<"Esta vacio"<<endl;
+        ui->msj_reg->setVisible(true);
+        ui->msj_reg->setText(QString::fromStdString("Debe rellenar todas las casillas"));
     }
 
 }
@@ -145,41 +157,37 @@ void registro::on_pushButton_clicked()
 void registro::on_pushButton_2_clicked()
 {
     QString alias,pass;
+    //obtiene lo ingresado en los line Edit
     alias=ui->lineEdit_2->text();
     pass=ui->lineEdit_3->text();
 
 
 
-    if(!alias.isDetached() && !pass.isEmpty()){
-        bool cond=veriUs(alias.toStdString(),pass.toStdString());
-        if(cond){
+    if(!alias.isDetached() && !pass.isEmpty()){ //si ambas casillas tienen información
+        bool cond=veriUs(alias.toStdString(),pass.toStdString()); //verifica que el usuario y contraseña coincidan con los de la base de datos
+        if(cond){ //si coinciden
             inicio *in;
             in=new inicio();
-            in->show();
-            in->setUsuario(alias.toStdString());
-            string linea = alias.toStdString()+"_Partida1.txt";
-            in->setchek(1);
-            in->cargarDatos(linea);
+            in->show();//se lleva a la pagina de inicio
+            in->setUsuario(alias.toStdString()); //pasa el usuario
+            string linea = alias.toStdString()+"_Partida1.txt"; //crea el nombre de partida
+            in->setchek(1); //casilla seleccionada por defecto
+            in->cargarDatos(linea); //carga datos del archivo de texto con el nombre de partida creado
             this->close();
 
         }
-        else{
-            cout<<"se equivoco verifique"<<endl;
+        else{ //si el usuario y contraseña no coinciden
+            cout<<"se equivocó, verifique"<<endl;
+            ui->msj_ins->setVisible(true);
+            ui->msj_ins->setText(QString::fromStdString("Nombre de usuario o contraseña errados"));
         }
     }
-    else{
+    else{//si faltan casillas por llenar
         cout<<"Esta vacio"<<endl;
+        ui->msj_ins->setVisible(true);
+        ui->msj_ins->setText(QString::fromStdString("Debe llenar todas las casillas"));
     }
 }
 
 
 
-
-/*
-
-fstream myfile;
-        myfile.open("datosUs.txt");
-
-myfile<<_alias<<","<<_pass<<";\n";
-myfile.close();
-*/
