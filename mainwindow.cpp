@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     holeOn=false;
     CanonPausado=0;
+    numero =0;
 
    scene = new QGraphicsScene;
 
@@ -101,7 +102,7 @@ void MainWindow::BossActive(bool t)
     else{ //desactiva el jefe y los cañones
         ui->bossHp->setVisible(false); // hace invisible el inicador de vida del jefe
         bossOn=false;
-        spawning->start(1000-int(puntaje/10)); //reinicia la aparición de asteroides en funcion del puntaje
+        spawning->start(1000); //reinicia la aparición de asteroides en funcion del puntaje
         powers->start(5000); // inicia el timer de aparición de poderes
         sorteo->stop(); // desactica el sorteo de cañones
         disparar->stop(); // desactiva el disparo de cañones
@@ -120,8 +121,9 @@ void MainWindow::spawn()
     // inicia el timer de aparición de los asteroides en función del puntaje
     if(puntaje>100&&puntaje<=500) spawning->start(1200);
     else if(puntaje>500&&puntaje<=1000 ) spawning->start(1000);
-    else if(puntaje>1000)spawning->start(1000-int(puntaje/10));
-    else if(puntaje>=10000)spawning->start(10);
+    else if(puntaje>1000&&puntaje<5000)spawning->start(1000-int(puntaje/10));
+    else if(puntaje>=5000&&puntaje<30000)spawning->start(600-int(puntaje/50));
+    else if(puntaje>=30000)spawning->start(10);
     int px = 90+rand()%631; // asigna una posición horizontal aleatoria
     drop * cosa = new drop(true);
     cosa->setPos(px,0); // posiciona el asteroide en la posición horizontal obtenida y en la parte superior de la pantalla
@@ -131,7 +133,7 @@ void MainWindow::spawn()
 
 void MainWindow::crearPoder(){
 
-    int px = 90+rand()%631; // asigna una posición horizontal aleatoria
+    int px = 90+rand()%631; // asigna una posición horizontal aleatoriad
     drop * cosa = new drop(false);
     cosa->setPos(px,0); // posiciona el asteroide en la posición horizontal obtenida y en la parte superior de la pantalla
     scene->addItem(cosa); // se agrega a la escena
@@ -163,6 +165,7 @@ void MainWindow::esconderAgujero()
 
 void MainWindow::on_pushButton_clicked(){
     pausa(); // llama la funcion pausa
+
 }
 
 void MainWindow::pausa()
@@ -177,6 +180,9 @@ void MainWindow::pausa()
     control->encendido(false); // desactiva el control
     MenuPausa *men;
     men=new MenuPausa();
+    if(player1->Vida()<=0 || ((!singlePlayer)&& player1->Vida()<=0 && player2->Vida()<=0 )){
+        men->esconder();
+    }
 
     men->setmain(this);
     men->show(); // abre el menu de pausa
@@ -187,7 +193,7 @@ void MainWindow::reanudar()
 {   animacion->start(50);
     if(!bossOn){ // si el jefe esta desactivado reinicia la aparicion de asteroides y poderes
 
-        spawning->start(1000-(puntaje/10));
+        spawning->start(1000);
         powers->start(5000);
     }
     else{ // si el jefe esta activado y reinicia el sorteo y disparo de los cañones
@@ -223,6 +229,13 @@ void MainWindow::guardarDatos()
 
 void MainWindow::cargarDatos(){
 
+    /*ESTRUCTURA DE LOS DATOS EN EL ARCHIVO DE TEXTO DE PARTIDA
+     *
+
+
+
+    */
+
 
     ifstream file(partida); //abre un archivo de lectura con el nombre de la partida
     char linea[50]="", dato[15]="", dato2[10]="";
@@ -246,6 +259,7 @@ void MainWindow::cargarDatos(){
 
     if(!singlePlayer){
          ui->graphicsView->scene()->addItem(player2);
+         player2->setPixmap(QPixmap(":/images/peque2.png"));
          control->setMultiplayer(true);//habilita el control para dos jugadores
     }
 
@@ -256,7 +270,7 @@ void MainWindow::cargarDatos(){
 
     puntaje=atoi(dato); //convierte el puntaje de char[] a entero
 
-    spawning->start(1000-(puntaje/10)); //inicia la aparición de asteroides en función del puntaje
+    spawning->start(1000); //inicia la aparición de asteroides en función del puntaje
 
     for(int i=0;dato[i]!='\0';i++) dato[i]='\0';
     file.getline(linea,50);//lee línea por línea el resto del archivo
@@ -364,6 +378,19 @@ void MainWindow::cargarDatos(){
 }
 
 void MainWindow::animar(){
+    if(numero==5){
+        player1->setPixmap(QPixmap(":/images/peque3.png"));
+        if(!singlePlayer)  player2->setPixmap(QPixmap(":/images/peque2.png"));
+    }
+    else if(numero==10){
+        numero=0;
+        player1->setPixmap(QPixmap(":/images/peque32.png"));
+        if(!singlePlayer)  player2->setPixmap(QPixmap(":/images/peque22.png"));
+        control->setFocus();// hace que control reciba las señales del teclado en caso de que hagan click en la pantalla y se pierda el foco
+    }
+    numero++;
+
+
     if(musica->state()!=QMediaPlayer::PlayingState){ musica->play();  } //si la música no se está reproduciendo, la reinicia
     ui->hp->display(QString::number(player1->Vida())); //muestra la vida del jugador 1
     if(!singlePlayer) ui->hp2->display(QString::number(player2->Vida())); //si el jugador 2 está activo, muestra su vida
@@ -450,13 +477,12 @@ void MainWindow::animar(){
 
     if(bossOn&&jefe->Vida()<=0){ //si el jefe está activo y su nivel de vida está debajo del mínimo
         BossActive(false); //desactiva el jefe
-        puntaje+=100; //suma 100 puntos al puntaje total
-        //crea y posiciona un poder tipo cura
-        drop* cosa= new drop(false);
-        cosa->setType("cura");
-        cosa->setPos(jefe->x()+130,jefe->y());
-        scene->addItem(cosa);
-        pows.push_back(cosa);
+        puntaje+=500; //suma 100 puntos al puntaje total
+        //aumenta el nivel de poder de los personajes
+        player1->setPoder(player1->Power()+1);
+        if(!singlePlayer) player2->setPoder(player2->Power()+1);
+
+
     }
 
     //análisis de colisiones entre balas y entes amigos y enemigos. las balas y poderes que cumplen su función son enviados a sus respectivas listas "basura"
@@ -553,8 +579,17 @@ void MainWindow::animar(){
 
             if(holeOn) drops.at(i)->move(1,hole->x(),hole->y());//si el agujero negro está activo, se mueve acelerado por la atracción gravitacional hacia las naves
             else{
-                if(singlePlayer) drops.at(i)->move(1,player1->x(),player1->y());
-                else drops.at(i)->move(1,player1->x(),player1->y(),player2->x(),player2->y());
+                if(singlePlayer) drops.at(i)->move(1,player1->x(),player1->y()); //movimiento de atraccion hacia el jugador 1
+                else{
+                    if(player1->Vida()>0 && player2->Vida()>0)
+                    drops.at(i)->move(1,player1->x(),player1->y(),player2->x(),player2->y()); // drop atraido por ambas naves
+                    else if(player1->Vida()>0){
+                        drops.at(i)->move(1,player1->x(),player1->y()); //movimiento de atraccion hacia el jugador 1
+                    }
+                    else if(player2->Vida()>0){
+                        drops.at(i)->move(1,player2->x(),player2->y()); //movimiento de atraccion hacia el jugador 2
+                    }
+                }
             }
 
             if(drops.at(i)->collidesWithItem(player1)||drops.at(i)->collidesWithItem(player2)){// si el drop colisiona con alguno de los jugadores
@@ -594,7 +629,7 @@ void MainWindow::animar(){
     }
     for(int i=pows.size()-1;i>=0;i--){
         pows.at(i)->move();//se mueve el poder
-        if(pows.at(i)->collidesWithItem(player2)||pows.at(i)->collidesWithItem(player1)){//si el poder colisiona con alguno de los jugadores, se aplica el efecto según el tipo
+        if((pows.at(i)->collidesWithItem(player2) && player2->Vida()>0)||(pows.at(i)->collidesWithItem(player1) &&player1->Vida()>0)){//si el poder colisiona con alguno de los jugadores, se aplica el efecto según el tipo
 
             if(pows.at(i)->Type()=="cura"){
                 if(pows.at(i)->collidesWithItem(player1)) player1->setVida(player1->Vida()+100);
@@ -610,14 +645,21 @@ void MainWindow::animar(){
             }
             else if(pows.at(i)->Type()=="escudo"){//activa el escudo
                  recto->setRect(0,0,720,30);
-                 recto->setBrush(Qt::green);
+                 QBrush bs;
+                 bs.setTexture(QPixmap(":/images/wall.png"));
+                 recto->setBrush(bs);
                  recto->setPos(50,300);
                  scene->addItem(recto);
                  QTimer::singleShot(10000,this,SLOT(esconderRecto()));
             }
-            else if(pows.at(i)->Type()=="gelato"){//activa la masa viscosa
+            else if(pows.at(i)->Type()=="gelato"){//activa la masa viscosa.
                 gelato->setRect(0,0,720,150);
-                gelato->setBrush(Qt::blue);
+                QColor x = Qt::cyan;
+                x.setAlphaF( 0.7 );
+                QBrush b(x);
+
+
+                gelato->setBrush(b);
                 gelato->setPos(50,150);
                 scene->addItem(gelato);
                 QTimer::singleShot(10000,this,SLOT(esconderGelato()));

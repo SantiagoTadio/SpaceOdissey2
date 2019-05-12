@@ -56,6 +56,8 @@ public:
     float VelY(){return velY;} // velocidad vertical del proyectil
     void setVel(float vx, float vy){velX= vx;  velY = vy;} // asigna velocidades horizontal y vertical del proyectil
 
+    int numero;
+
 private:
     string ID;
     int valor;
@@ -64,7 +66,7 @@ private:
 public slots:
     void move(float dt,int posX, int posY, int posX2=10000, int posY2=10000); // movimiento acelerado de atracci de los asteroides
     void move(){setPos(x(),y()+5);} // movimiento rectilíneo uniforme de las balas
-    void moveBack(float dt,int posX, int posY, int posX2=10000, int posY2=10000); // movimiento acelerado de repulsión de los asteroides
+
 
 
 

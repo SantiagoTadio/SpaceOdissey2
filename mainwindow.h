@@ -32,6 +32,7 @@ public:
     ~MainWindow();
     string Partida(){return partida;} // Retorna el nombre de la partida que esta jugando
     void BossActive(bool t); // Activa(aparece) o desactiva(desaparace) al jefe
+    int numero;// numero es la variable que alterna las imágenes de las naves, para crear el efecto de destello
 
 public slots:
 

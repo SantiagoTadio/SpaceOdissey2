@@ -20,6 +20,13 @@
         <file>bossPeque3.png</file>
         <file>jefeGus2.png</file>
         <file>jefeGus3.png</file>
+        <file>peque2.png</file>
+        <file>peque22.png</file>
+        <file>peque32.png</file>
+        <file>fireball_big22.png</file>
+        <file>fireball_big23.png</file>
+        <file>fireball_small22.png</file>
+        <file>wall.png</file>
     </qresource>
     <qresource prefix="/music">
         <file>audio.mp3</file>

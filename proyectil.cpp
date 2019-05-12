@@ -34,7 +34,7 @@ void drop::setType(string t)
     if(t=="asteroideB"){
         setPixmap(QPixmap(":/images/fireball_big2.png"));
 
-        valor=100;
+        valor=201;
     }
     else if(t=="asteroideS"){
         setPixmap(QPixmap(":/images/fireball_small2.png"));
@@ -69,6 +69,7 @@ void proyectil::move(){
 
 drop::drop(bool asteroide)
 {
+    numero=0;
 
     velX =0;
     velY = -5;
@@ -80,7 +81,7 @@ drop::drop(bool asteroide)
             ID = "asteroideB";//grande
             setPixmap(QPixmap(":/images/fireball_big2.png"));
 
-            valor=100;
+            valor=210;
         }
         else {
             ID = "asteroideS";//pequeño
@@ -121,7 +122,27 @@ drop::drop(bool asteroide)
 
 void drop::move( float dt,int posX, int posY, int posX2, int posY2) //movimiento acelerado de los asteroides hacia una o dos naves
 {
+    numero++;
+    if(ID=="asteroideB"){
+        if(numero==4)
+            setPixmap(QPixmap(":/images/fireball_big2.png"));
+        else if(numero==8)
+            setPixmap(QPixmap(":/images/fireball_big22.png"));
+        else if(numero==12)
+            setPixmap(QPixmap(":/images/fireball_big23.png"));
+        else if(numero==16){
+            setPixmap(QPixmap(":/images/fireball_big22.png"));
+            numero=0;
+        }
 
+    }else if(ID=="asteroideS"){
+        if(numero==5)
+            setPixmap(QPixmap(":/images/fireball_small2.png"));
+        else if(numero==10){
+            numero=0;
+            setPixmap(QPixmap(":/images/fireball_small22.png"));
+        }
+    }
     float Ax, Ay, angulo, rcuad, dx, dy;
     dx= posX-x();  dy= posY-y(); //halla la distancia vertical y horizontal entre las posiciones del jugador 1 y el asteroide
     rcuad = (dx*dx)+(dy*dy);

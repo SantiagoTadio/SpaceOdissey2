@@ -16,7 +16,7 @@ void controles::timeOutEvent()
                 if(shoot1){
                     pj1->shoot();
                     shoot1=false;
-                    QTimer::singleShot((150*pj1->Power()),this,SLOT(setTrue1()));
+                    QTimer::singleShot(100+int(50*pj1->Power()),this,SLOT(setTrue1()));
                 }
             }
         }
@@ -32,7 +32,7 @@ void controles::timeOutEvent()
                     if(shoot2){
                          pj2->shoot();
                          shoot2=false;
-                         QTimer::singleShot((150*pj2->Power()),this,SLOT(setTrue2()));
+                         QTimer::singleShot(100+int(50*pj2->Power()),this,SLOT(setTrue2()));
                     }
 
                 }
@@ -65,7 +65,7 @@ void controles::controlesArdu()
                     if(shoot1){
                         pj1->shoot();
                         shoot1=false;
-                        QTimer::singleShot((150*pj1->Power()),this,SLOT(setTrue1()));
+                        QTimer::singleShot(100+int(50*pj1->Power()),this,SLOT(setTrue1()));
                     }
                     break;
                 case 'i':
@@ -80,7 +80,7 @@ void controles::controlesArdu()
                         if(shoot2){
                              pj2->shoot();
                              shoot2=false;
-                             QTimer::singleShot((150*pj2->Power()),this,SLOT(setTrue2()));
+                             QTimer::singleShot(100+int(50*pj2->Power()),this,SLOT(setTrue2()));
                         }
                     }
                     break;
@@ -106,7 +106,7 @@ void controles::controlesArdu()
 
 controles::controles(){ //constructor
     timer->start(50);
-    connect(timer,SIGNAL(timeout()),this,SLOT(timeOutEv ent()));
+    connect(timer,SIGNAL(timeout()),this,SLOT(timeOutEvent()));
     on=true;  multiplayer=false;  shoot1=true;   shoot2=true;  vivo1=true;    vivo2=true;
     connect(ardu,SIGNAL(timeout()),this,SLOT(controlesArdu()));
 }

@@ -35,8 +35,10 @@ public:
 
 
 
+
 private:
     int vida;
+
 
 
 };
@@ -60,10 +62,12 @@ public:
     int Vida(){return vida;} // Retorna la vida de la nave
     void setVida(int v){vida=v;  if(v>vidaMax)vida=vidaMax;} // Asigna el nivel de vida a la nave asegurandose que no sobre pase el nivel de vida maxima
 
+
 private:
     int power,vidaMax, vida;
     QList<proyectil*> *lista;
     QMediaPlayer * shot;
+
 
 };
 

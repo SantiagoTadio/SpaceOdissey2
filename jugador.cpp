@@ -12,6 +12,7 @@ jugador::jugador(QList<proyectil*>* listeishon) //recibe la dirección a la list
     shot->setMedia(QUrl("qrc:/music/shot1.mp3")); // sonido de disparo
     
     lista = listeishon;
+
     setVida(1000); // nivel de vida inicial
 
 }
@@ -32,6 +33,7 @@ void jugador::shoot()
     if(Power()==1){
         shot->setMedia(QUrl("qrc:/music/shot1.mp3"));
         proyectil* bala = new proyectil;
+        bala->setEfecto(100);
         lista->push_back(bala);
         shot->play();
 
@@ -42,7 +44,9 @@ void jugador::shoot()
         shot->setMedia(QUrl("qrc:/music/shot2.mp3"));
         shot->play();
         proyectil* bala = new proyectil;
+        bala->setEfecto(150);
         proyectil* bala2 = new proyectil;
+        bala2->setEfecto(150);
         lista->push_back(bala);
         lista->push_back(bala2);
 
@@ -56,8 +60,11 @@ void jugador::shoot()
         shot->setMedia(QUrl("qrc:/music/shot3.mp3"));
         shot->play();
         proyectil* bala = new proyectil;
+        bala->setEfecto(200);
         proyectil* bala2 = new proyectil;
+        bala2->setEfecto(200);
         proyectil* bala3 = new proyectil;
+        bala3->setEfecto(200);
         lista->push_back(bala);
         lista->push_back(bala2);
         lista->push_back(bala3);
