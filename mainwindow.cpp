@@ -230,7 +230,9 @@ void MainWindow::guardarDatos()
 void MainWindow::cargarDatos(){
 
     /*ESTRUCTURA DE LOS DATOS EN EL ARCHIVO DE TEXTO DE PARTIDA
-     *
+     * numero de jugadores ; jefe activo(1) o inactivo(0) ; puntaje;
+     * vida jugador 1 ; nivel de poder jugador 1 ; posicion horizontal jugador 1 ; posicion vertical jugador 1
+     * vida jugador 2 ; nivel de poder jugador 2 ; posicion horizontal jugador 2 ; posicion vertical jugador 2
 
 
 
